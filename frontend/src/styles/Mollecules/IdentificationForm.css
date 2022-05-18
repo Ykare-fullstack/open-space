@@ -1,0 +1,14 @@
+.identification-form-frame {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    height: 200px;
+}
+#login-submit-button {
+    padding: 3%;
+}
+.identification-form-frame input {
+    margin-bottom: 15px;
+}

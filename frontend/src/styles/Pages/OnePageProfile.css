@@ -1,0 +1,86 @@
+.one-page-user-profile {
+    display: flex;
+    flex-direction: column;
+}
+.one-page-user-display {
+    display: flex;
+}
+.one-page-profile-nav {
+    width: 20%;
+}
+.account-info-display-frame {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    padding: 3% 2% 2% 2%;
+    margin: 4% 0 4% 0;
+    max-width: 400px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6);
+    transform: opacity(1);
+    animation: 1s ease-out fadeIn 1;
+}
+.account-info-display-frame button {
+    margin-top: 2%;
+}
+.post-preview-display-frame {
+    display: flex;
+    background-color: rgb(237, 237, 237);
+    padding: 2%;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 6%;
+    height: fit-content;
+    justify-content: center;
+    flex-wrap: wrap;
+    box-shadow: inset 0px 4px 12px rgba(0, 0, 0, 0.6);
+    transform: opacity(1);
+    animation: 2s ease-out fadeIn 1;
+}
+.account-info-sizer {
+    display: flex;
+    justify-content: center;
+    width: 60%;
+}
+#switchR {
+    background-color: #0a1e46;
+    color: white;
+    border: solid 1px #0a1e46;
+    border-radius: 5px;
+    width: 80%;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    line-height: inherit;
+}
+.one-page-profile-switch-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 55%;
+    margin-bottom: 2%;
+}
+
+#one-page-profile-delete:hover::after {
+    content: 'supprimer le compte';
+    background-color: #d2505a;
+}
+@media screen and (max-width: 1024px) {
+    .one-page-user-profile {
+        display: flex;
+        flex-direction: column;
+    }
+    .one-page-user-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .one-page-profile-nav {
+        width: 100%;
+    }
+}

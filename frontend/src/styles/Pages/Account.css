@@ -1,0 +1,30 @@
+.account-body {
+    display: flex;
+    width: 100%;
+}
+.account-nav {
+    width: 20%;
+}
+
+.account-dashboard {
+    margin: 2% 0 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 60%;
+}
+@media screen and (max-width: 1024px) {
+    .account-nav {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        border: solid 1px red;
+    }
+    .account-body {
+        flex-direction: column;
+    }
+    .account-dashboard {
+        width: 100%;
+    }
+}

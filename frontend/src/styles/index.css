@@ -1,0 +1,89 @@
+@font-face {
+    font-family: 'Brolachess';
+    src: local('Brolachess'),
+        url('../assets/fonts/Brolachess-nRJm4.ttf') format('truetype');
+    font-weight: bold;
+}
+@font-face {
+    font-family: 'Nalieta';
+    src: local('Nalieta'),
+        url('../assets/fonts/Nalieta-nR5EP.otf') format('truetype');
+}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+body {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 30, 70, 0.1);
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+        'Helvetica Neue', 'Montserrat', 'Lemonada', sans-serif, cursive;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
+#root {
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    margin: 1% 0 1% 0;
+    padding: 0;
+    font-family: 'Nalieta';
+    font-size: 5vh;
+    letter-spacing: 0.15em;
+    font-weight: bold;
+    align-self: center;
+    text-align: center;
+    transform: opacity(1);
+    animation: 1s ease-in-out fadeIn 1;
+}
+h2 {
+    font-family: 'Lato', cursive;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: 2.5px;
+}
+h3 {
+    font-family: 'Montserrat', sans-serif;
+    margin: 1% 0 1% 0;
+    font-size: 1.25em;
+}
+
+p {
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        visibility: hidden;
+    }
+    100% {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@keyframes teleport {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

@@ -1,0 +1,10 @@
+.navigation-tab {
+    width: 20%;
+}
+@media screen and (max-width: 1024px) {
+    .navigation-tab {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+}
