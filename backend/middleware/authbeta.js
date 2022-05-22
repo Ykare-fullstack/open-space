@@ -6,7 +6,9 @@ const cors = require('cors')
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended : true }))
-
+//module d'authorisation beta : 
+//requiert un jwt valide 
+//et être le propriétaire de la ressource ou autorité de niveau 2 minimum
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization

@@ -3,9 +3,9 @@
 
 ## Installation des modules :  
 
-dans le répertoire backend : npm install  
+dans le répertoire backend : **npm install**  
 
-dans le répertoire frontend : npm install  
+dans le répertoire frontend : **npm install**  
 
 ## Installation de la base de donnée et connexion :
 
@@ -15,12 +15,10 @@ changer les variables d'environnement relatives à votre connection de base de d
 
 si la base de donnée ne reconnait pas l'utilisateur (mot de passe trop faible), injecter dans la base de données:  
 
-> `ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'`  
-
-en remplaçant password par vos informations de connexion  
+>`ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'votre_password'`  
 
 ## Démarrage serveur :
 
-dans le répertoire backend : *nodemon server*
+dans le répertoire backend : **nodemon server**
 
-dans le répertoire frontend : *npm run start*
+dans le répertoire frontend : **npm run start**

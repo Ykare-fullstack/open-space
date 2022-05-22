@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
 
 //-----------------------------------------------------------------------------------
+//module de création de compte (et initialisation du role)
 exports.signup = (req, res, next)=> {
 
  
@@ -51,6 +52,8 @@ exports.signup = (req, res, next)=> {
 };
 
 //-----------------------------------------------------------------------------------
+//module de connexion 
+//création du token
 exports.login = (req, res, next) => {
 
   const userEmail =req.body.email

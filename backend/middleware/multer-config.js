@@ -6,7 +6,7 @@ const MIME_TYPES = {
   'image/jpeg': 'jpg',
   'image/png': 'png'
 };
-
+//module de gestion des envois de fichiers de l'utilisateur vers la BDD
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, './images');
@@ -17,5 +17,5 @@ const storage = multer.diskStorage({
     callback(null, name + Date.now() + '.' + extension);
   }
 });
-
+//limite de 10 photos par envoi
 module.exports = multer({storage: storage}).array('file',10);
