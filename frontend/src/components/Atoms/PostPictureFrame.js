@@ -7,7 +7,7 @@ function PostPictureFrame(props) {
             <img
                 className="post-picture"
                 src={props.picture.url}
-                alt="élément visuel du post"
+                alt={`élément visuel du post ${props.postId}`}
             />
         </div>
     )

@@ -1,15 +1,13 @@
 .info-frame-wrapper {
-    transition: all 0.3s ease 0s;
     display: flex;
-
+    height: auto;
+    margin: 35px 0 35px 0;
     flex-direction: column;
     align-items: center;
-    padding-top: 10%;
     transition: all 0.5s ease 0s;
 }
 
 .info-frame {
-    margin-top: 50px;
     padding: 5px 20px 3px 20px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6);
     border-right: 0;
@@ -42,7 +40,7 @@
         border-radius: 20px;
         background-color: white;
         display: flex;
-        margin: 0px;
+        margin: 0;
         transition: all 0.5s ease 0s;
         transform-origin: top;
         height: 0px;
@@ -51,7 +49,7 @@
     }
 
     .info-frame-wrapper {
+        margin: 0;
         padding-top: 0;
-        max-height: fit-content;
     }
 }

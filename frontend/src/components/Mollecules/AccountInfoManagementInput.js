@@ -162,6 +162,7 @@ function AccountInfoManagementInput(props) {
                         console.log(userData.description)
                     }}
                     id="description-input"
+                    aria-label="zone de saisie de votre nouvelle bio"
                 />
                 {document.activeElement &&
                 document.activeElement.id === 'description-input' ? (
@@ -175,6 +176,7 @@ function AccountInfoManagementInput(props) {
                         type="submit"
                         onClick={submitBioModif}
                         className="submit-button"
+                        ria-label="valider saisie de votre nouvelle bio"
                     >
                         Confirmer
                     </button>
@@ -193,11 +195,13 @@ function AccountInfoManagementInput(props) {
                     accept="image/jpg, image/png, image/jpeg"
                     name="file"
                     onChange={(e) => setUpdatedPicture(e.target.files)}
+                    aria-label="selection de photo de profil"
                 />
                 <button
                     type="submit"
                     onClick={submitPictureModif}
                     className="submit-button"
+                    aria-label="envoyer votre nouvelle photo de profil"
                 >
                     Confirmer
                 </button>
@@ -212,6 +216,7 @@ function AccountInfoManagementInput(props) {
                     onChange={(e) => setPasswordValue(e.target.value)}
                     className="password-input"
                     id="password"
+                    aria-label="zone de saisie de votre nouveau mot de passe"
                 />
                 {document.activeElement &&
                 document.activeElement.id === 'password' ? (
@@ -269,6 +274,7 @@ function AccountInfoManagementInput(props) {
                     onChange={(e) => setPasswordValueVerif(e.target.value)}
                     className="password-input"
                     id="password"
+                    aria-label="zone de répétition de votre nouveau mot de passe"
                 />
                 {isPasswordValid(passwordValue) &&
                 passwordValue === passwordValueVerif ? (

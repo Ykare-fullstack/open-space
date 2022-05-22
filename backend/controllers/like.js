@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+
 const express = require('express');   
 const app = express();
 const cors = require ('cors')
@@ -6,8 +6,6 @@ var db= require('../utils/MySqlConnector')
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
-
-
 
 exports.getAppraisal = (req, res, next) =>{
     const postId = req.params.postId

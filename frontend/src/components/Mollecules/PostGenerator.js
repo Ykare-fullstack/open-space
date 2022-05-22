@@ -1,10 +1,12 @@
 import '../../styles/Mollecules/PostGenerator.css'
 import React, { useState, useContext } from 'react'
+
 import { LoginContext } from '../../contexts/index'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 //-------------------------------------------------------------------------------------------
-function PostGenerator() {
+function PostGenerator(props) {
+    console.log(props.hasUpdated)
     const [post, setPost] = useState({
         description: '',
         pictures: [],
@@ -38,18 +40,22 @@ function PostGenerator() {
                 authorization: token,
             }),
         }
+        setUpdatedPictures([])
+        setPicturesToSend([])
+        setPost({
+            description: '',
+            pictures: [],
+            category: '',
+        })
 
+        props.setHasUpdated(!props.hasUpdated)
         fetch(url, createPost)
             .then((response) => response.json())
-            .then(() => {
+            .then((res) => {
                 console.log('post crée')
-                setUpdatedPictures([])
-                setPicturesToSend([])
-                setPost({
-                    description: '',
-                    pictures: [],
-                    category: '',
-                })
+                if (res.sent) {
+                    window.location.reload()
+                }
             })
             .catch((error) => {
                 console.log({ error })
@@ -78,7 +84,7 @@ function PostGenerator() {
         }
     }
     return (
-        <div className="postgenerator-frame">
+        <form id="postgenerator" className="postgenerator-frame">
             <h2>racontez-nous !</h2>
             {updatedPictures.length === 0 ? null : (
                 <div className="postgenerator-picture-display-frame">
@@ -140,6 +146,10 @@ function PostGenerator() {
                     />
                 </div>
                 <div className="postgenerator-description-typer">
+                    <label htmlFor="post-description" hidden>
+                        {' '}
+                        saisissez ici la description de votre publication
+                    </label>
                     <textarea
                         id="post-description"
                         value={post.description === '' ? '' : post.description}
@@ -179,7 +189,8 @@ function PostGenerator() {
                 </div>
             </div>
             <div className="postgenerator-button-wrapper">
-                {updatedPictures.length > 10 ? (
+                {post.description === '' ? null : updatedPictures.length >
+                  10 ? (
                     <button
                         type="submit"
                         disabled={true}
@@ -201,7 +212,7 @@ function PostGenerator() {
                     </button>
                 )}
             </div>
-        </div>
+        </form>
     )
 }
 

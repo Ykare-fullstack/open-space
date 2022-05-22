@@ -132,6 +132,7 @@
     content: 'supprimer la publication';
     background-color: #d2505a;
     border-radius: 15px;
+    padding: 5px;
 }
 #postrepair-submit-button {
     width: 40px;

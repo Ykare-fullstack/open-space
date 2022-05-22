@@ -95,7 +95,9 @@ function CommentFrame(props) {
                             onChange={(e) => setUpdatedComment(e.target.value)}
                             defaultValue={props.content}
                             className="update-comment-content-input"
+                            id="update-comment-text-input"
                         />
+                        <label for="update-comment-text-input" hidden></label>
                         <div className="update-comment-button-wrapper">
                             <button
                                 type="submit"

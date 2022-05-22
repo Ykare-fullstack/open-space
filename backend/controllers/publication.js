@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require ('cors')
 const fs = require('fs');
-const { stringify } = require('querystring');
+
 const curatedLibrary = ['le','la','les','de','du','des','mon','ma','mes','et','ou','ton','ta','tes','son','sa','ses','un',"d'","l'","t'"]
 
 var db = require('../utils/MySqlConnector')
@@ -18,26 +18,30 @@ exports.createPublication = (req, res, next) =>{
     let multiValues = []
     
     db.query("INSERT INTO posts (description, category, iduser, creationdate) VALUES (?, ?, ?, NOW())", [ description, category, userId ], (err,result) => {
-        
-        if(!err)
-        {
-            if (req.files.length !== 0) {
-                    for (const single_file of req.files) {
-                        
-                        pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
-                        pictureData = [pictureAdress, userId, 0, result.insertId]
-                        multiValues.push(pictureData)
-                    }
-                }
-            db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (error) => {
-                if(err){
-                        console.log({error: error})
-                }
-            })    
-        }
-        else{
+        if(err){
             console.log("erreur 1")
         }
+        else{
+            if (req.files.length === 0) {
+                res.status(400).json({sent:true})     
+            }
+            else{
+                for (const single_file of req.files) {      
+                    pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
+                    pictureData = [pictureAdress, userId, 0, result.insertId]
+                    multiValues.push(pictureData)
+                }
+                db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (error) => {
+                    if(error){
+                        console.log({error: error})
+                    }
+                    else{
+                        res.status(400).json({sent:true})
+                    }
+                })    
+            }
+            
+        }  
     })   
 }
 

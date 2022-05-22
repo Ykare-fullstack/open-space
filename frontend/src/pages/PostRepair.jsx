@@ -5,8 +5,15 @@ import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import GeneralNav from '../components/Mollecules/NavFrameGeneral'
 
+// page de modification de publication contenant :
+// - une section de navigation lien vers: compte, cette page, les groupes et le tri de post par catégories
+// - l'affichage des photos du post modifiable (ajout/suppression)
+// - l'affichage de la descriptioon de la publication modifiable
+//-------------------------------------------------------------------------------------------
 function PostRepair() {
     const isLoading = useRef(true)
+    //post : buffer de récupération des informations de la publication via l'API
+    //       sert aussi à l'affichage
     const [post, setPost] = useState({
         pictures: [],
         description: '',
@@ -14,9 +21,11 @@ function PostRepair() {
         idPost: 0,
         comments: [],
     })
+    // uploadedPictures : array of files à envoyer à l'API
     const [uploadedPictures, setUploadedPictures] = useState([])
     const { userData } = useContext(LoginContext)
     const navigate = useNavigate()
+
     const string = window.location.href
     const url = new URL(string)
     const postId = Number(url.pathname.split('/')[2])
@@ -40,7 +49,8 @@ function PostRepair() {
             })
             .then(() => (isLoading.current = false))
     }, [])
-
+    //----------------------------------------------------------
+    //fonction de modification du post (envoi vers API)
     function updatePost() {
         const urlupdate = 'http://localhost:3001/api/publication/' + post.idUser
         if (uploadedPictures.length !== 0) {
@@ -72,7 +82,8 @@ function PostRepair() {
             navigate('/')
         })
     }
-
+    //----------------------------------------------------------
+    //fonction de suppression du post (envoi vers API)
     function deletePost(e) {
         e.preventDefault()
         const urldelete = 'http://localhost:3001/api/publication/'
@@ -93,7 +104,8 @@ function PostRepair() {
             navigate('/')
         })
     }
-
+    //----------------------------------------------------------
+    //fonction de modification de l'affichage en fonction des photos téléchargées ou supprimées par l'utilisateur
     function updateDisplay(e) {
         e.preventDefault()
         setUploadedPictures([...uploadedPictures, ...e.target.files])
@@ -144,6 +156,7 @@ function PostRepair() {
                         icon="fa-solid fa-paperclip"
                         size="1x"
                         className="paperclip-info-icon"
+                        aria-label="trombonne"
                     />
                     <p>pour en ajouter (10 photos max)</p>
                 </div>
@@ -154,6 +167,7 @@ function PostRepair() {
                               <button
                                   className="postrepair-picture-placeholder"
                                   key={index}
+                                  aria-label="cliquez pour supprimer l'image"
                                   onClick={(e) => {
                                       e.preventDefault()
 
@@ -194,6 +208,7 @@ function PostRepair() {
                     {post.pictures.length >= 10 || isLoading.current ? null : (
                         <label
                             htmlFor="file-selector"
+                            aria-label="zone de sélection des photos du post"
                             className="postrepair-picture-placeholder postrepair-file-input"
                         >
                             <input
@@ -206,6 +221,7 @@ function PostRepair() {
                                 onChange={(e) => {
                                     updateDisplay(e)
                                 }}
+                                aria-label="zone de sélection des photos du post"
                             />
 
                             <FontAwesomeIcon
@@ -224,6 +240,7 @@ function PostRepair() {
                             setPost({ ...post, description: e.target.value })
                         }}
                         id="postrepair-description-input"
+                        aria-label="zone de sélection de la description du post"
                     />
                 </div>
                 <div className="postrepair-submit-buttons-frame">
@@ -233,6 +250,7 @@ function PostRepair() {
                             onClick={deletePost}
                             className="delete-button"
                             id="post-repair-delete-button"
+                            aria-label="bouton de suppression du post"
                         >
                             <FontAwesomeIcon
                                 icon="fa-solid fa-trash-alt"
@@ -241,8 +259,20 @@ function PostRepair() {
                         </button>
                     ) : null}
                     {post.pictures.length > 10 ? (
-                        <button type="submit" disabled={true}>
+                        <button
+                            type="submit"
+                            disabled={true}
+                            className="submit-button-wrong"
+                        >
                             10 images par post maximum
+                        </button>
+                    ) : post.description === '' ? (
+                        <button
+                            type="submit"
+                            disabled={true}
+                            className="submit-button-wrong"
+                        >
+                            Description vide
                         </button>
                     ) : (
                         <button
@@ -250,6 +280,7 @@ function PostRepair() {
                             onClick={updatePost}
                             className="toggle-modif-button"
                             id="postrepair-submit-button"
+                            aria-label="mise à jour de la publication avec les informations saisies dnas les champs précédents"
                         >
                             <FontAwesomeIcon
                                 icon="fa-solid fa-check"

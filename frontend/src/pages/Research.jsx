@@ -1,17 +1,23 @@
 import '../styles/Pages/Research.css'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import PostPreview from '../components/Atoms/PostPreview'
 import UserPreview from '../components/Atoms/UserPreview'
 import GeneralNav from '../components/Mollecules/NavFrameGeneral'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+// page de modification de publication contenant :
+// - une section de navigation lien vers: compte, cette page, les groupes et le tri de post par catégories
+// - l'affichage des photos du post modifiable (ajout/suppression)
+// - l'affichage de la descriptioon de la publication modifiable
+//-------------------------------------------------------------------------------------------
 function Research() {
     const token = sessionStorage.getItem('token')
-
     const [postBuffer, setPostBuffer] = useState([])
     const [userBuffer, setUserBuffer] = useState([])
     const [postSearch, setPostSearch] = useState('')
     const [userSearch, setUserSearch] = useState('')
+    const firstRenderPost = useRef(true)
+    const firstRenderUser = useRef(true)
 
     const searchUserAndPost = {
         method: 'GET',
@@ -20,6 +26,7 @@ function Research() {
         }),
     }
     function submitPostResearch() {
+        firstRenderPost.current = false
         setPostBuffer([])
         let curatedParams = postSearch.split(' ').join('&')
         console.log('after 1st split')
@@ -29,11 +36,13 @@ function Research() {
         fetch(urlSearchPosts, searchUserAndPost)
             .then((response) => response.json())
             .then((resultPosts) => {
-                console.log(resultPosts)
-                setPostBuffer(resultPosts)
+                if (resultPosts) {
+                    setPostBuffer(resultPosts)
+                }
             })
     }
     function submitUserResearch() {
+        firstRenderUser.current = false
         setUserBuffer([])
         let curatedParams = userSearch.split(' ').join('&')
         const urlSearchUsers =
@@ -45,6 +54,7 @@ function Research() {
                 setUserBuffer(resultUsers)
             })
     }
+
     return (
         <div className="research-page-body">
             <div className="research-nav">
@@ -60,10 +70,12 @@ function Research() {
                             onChange={(e) => {
                                 setPostSearch(`${e.target.value}`)
                             }}
+                            aria-label="zone de saisie pour recherche de post"
                         />
                         <button
                             onClick={submitPostResearch}
                             className="submit-button"
+                            aria-label="valider votre saisie"
                         >
                             <FontAwesomeIcon
                                 icon="fa-solid fa-magnifying-glass"
@@ -71,14 +83,17 @@ function Research() {
                             />
                         </button>
                         <div className="post-research-display-frame">
-                            {postBuffer.length === 0
-                                ? null
-                                : postBuffer.map((post) => (
-                                      <PostPreview
-                                          key={post.idpost}
-                                          post={post}
-                                      />
-                                  ))}
+                            {firstRenderPost.current ? null : postBuffer.length ===
+                              0 ? (
+                                <p>pas de résultats </p>
+                            ) : (
+                                postBuffer.map((post) => (
+                                    <PostPreview
+                                        key={post.idpost}
+                                        post={post}
+                                    />
+                                ))
+                            )}
                         </div>
                     </div>
                     <div className="user-search-frame">
@@ -89,10 +104,12 @@ function Research() {
                                 setUserSearch(`${e.target.value}`)
                                 console.log(userSearch)
                             }}
+                            aria-label="zone de saisie pour recherche d'utilisateur"
                         />
                         <button
                             onClick={submitUserResearch}
                             className="submit-button"
+                            aria-label="valider votre saisie"
                         >
                             <FontAwesomeIcon
                                 icon="fa-solid fa-magnifying-glass"
@@ -100,14 +117,17 @@ function Research() {
                             />
                         </button>
                         <div className="user-research-display-frame">
-                            {userBuffer.length === 0
-                                ? null
-                                : userBuffer.map((user) => (
-                                      <UserPreview
-                                          key={user.idusers}
-                                          user={user}
-                                      />
-                                  ))}
+                            {firstRenderUser.current ? null : userBuffer.length ===
+                              0 ? (
+                                <p>pas de résultats </p>
+                            ) : (
+                                userBuffer.map((user) => (
+                                    <UserPreview
+                                        key={user.idusers}
+                                        user={user}
+                                    />
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>

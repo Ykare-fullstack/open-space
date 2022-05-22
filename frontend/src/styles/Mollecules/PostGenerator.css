@@ -119,6 +119,7 @@
     cursor: pointer;
     outline: none;
     margin-bottom: 15px;
+    animation: fadeIn 0.3s;
 }
 
 .submit-post-button:hover {

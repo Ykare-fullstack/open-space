@@ -1,5 +1,5 @@
 const cors = require('cors');
-const mysql = require('mysql');
+
 const express = require('express');   
 const app = express();
 var db = require('../utils/MySqlConnector')

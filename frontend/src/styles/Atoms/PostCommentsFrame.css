@@ -1,15 +1,29 @@
 .comments-frame {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     width: 100%;
+
     overflow-y: auto;
-    height: fit-content;
-    padding: 1% 2% 0 2%;
-    max-height: 80%;
+    scrollbar-width: thin;
+    max-height: 300px;
+    padding: 15px 15px 0 15px;
     background-color: rgba(10, 30, 70, 0.1);
     box-shadow: inset 0px 4px 12px rgba(0, 0, 0, 0.6);
 }
+.shadow-bottom {
+    position: relative;
+    z-index: 2;
+
+    box-shadow: 0px -10px 10px -10px #000 inset;
+
+    height: 20px;
+    margin-top: -35px;
+    margin-right: 15px;
+}
 .comments-input-frame {
     width: 100%;
-    height: 20%;
+    max-height: 200px;
     margin: 0;
     padding: 0;
     height: fit-content;

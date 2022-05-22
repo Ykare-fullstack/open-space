@@ -9,6 +9,7 @@ function PostPreview(props) {
             <Link
                 key={props.post.idpost}
                 to={`/OnePagePost/${props.post.idpost}`}
+                id="post-preview-link"
             >
                 {props.post.picture.length === 0 ? null : (
                     <div className="post-preview-picture-frame">

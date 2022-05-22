@@ -57,7 +57,7 @@ function DisplayedPost(props) {
                             >
                                 <img
                                     src={owner.profilepicture}
-                                    alt={`${owner.firstname} ${owner.lastname}`}
+                                    alt="lien vers le profil :"
                                     className={'post-owner-profile-picture'}
                                 />
                                 <div className="popping-post-owner-name">
@@ -91,6 +91,7 @@ function DisplayedPost(props) {
                             {props.post.pictures.length !== 0 ? (
                                 <PostPictureFrame
                                     picture={props.post.pictures[0]}
+                                    postId={postId}
                                 />
                             ) : null}
 
@@ -99,8 +100,10 @@ function DisplayedPost(props) {
                             />
                         </Link>
                     </div>
-                    <PostAppraisalFrame postId={postId} />
-                    <PostCommentsFrame postId={postId} />
+                    <div className="post-user-interaction-frame">
+                        <PostAppraisalFrame postId={postId} />
+                        <PostCommentsFrame postId={postId} />
+                    </div>
                 </React.Fragment>
             )}
         </div>

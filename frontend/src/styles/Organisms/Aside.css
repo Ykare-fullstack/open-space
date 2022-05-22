@@ -1,7 +1,7 @@
 .aside-wrapper {
     display: flex;
     flex-direction: column;
-    width: 20%;
+    width: 25%;
     transition: all 0.3s ease 0s;
 }
 @media screen and (max-width: 1280px) and (min-width: 700px) {
@@ -9,13 +9,11 @@
         flex-direction: row;
         justify-content: space-evenly;
         width: 100%;
-        padding: 3%;
     }
 }
 @media screen and (max-width: 700px) {
     .aside-wrapper {
         flex-direction: column;
         width: 100%;
-        padding: 3%;
     }
 }

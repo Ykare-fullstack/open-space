@@ -43,8 +43,15 @@ function PostCommentInputFrame(props) {
             <textarea
                 onChange={(e) => setNewComment(e.target.value)}
                 id="comment-input"
+                aria-label="zone de saisie de nouveaux commmentaire"
             />
-            <button type="submit" onClick={sendNewComment} id="comment-submit">
+
+            <button
+                type="submit"
+                onClick={sendNewComment}
+                id="comment-submit"
+                aria-label="envoyer le commmentaire saisie"
+            >
                 <FontAwesomeIcon icon="fa-solid fa-paper-plane" size="1x" />
             </button>
         </div>

@@ -4,19 +4,24 @@
     max-width: 100%;
     border-radius: 10px;
     word-wrap: break-word;
-    padding: 0 1% 1% 1%;
-    margin: 3% 0 3% 0;
+    padding: 0;
+    margin: 10px 0 10px 0;
 }
 .comment p {
     padding: 0;
     height: fit-content;
+    max-width: 100%;
+    margin: 20px 5px 5px 5px;
 }
 .update-comment-panel {
     background-color: white;
+    margin-bottom: 20px;
+    padding: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-radius: 15px;
 }
 .update-comment-content-input {
     resize: none;

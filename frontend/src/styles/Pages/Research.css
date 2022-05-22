@@ -81,6 +81,7 @@
 
 .post-research-display-frame {
     margin-top: 2%;
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -88,6 +89,7 @@
 }
 .user-research-display-frame {
     margin-top: 2%;
+
     display: flex;
     flex-direction: row;
     align-items: center;

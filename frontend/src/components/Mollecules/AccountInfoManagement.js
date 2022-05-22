@@ -31,6 +31,8 @@ function AccountInfoManagement() {
             .then((res) => {
                 console.log(res.check)
                 if (res.check) setShowing((v) => !v)
+                else {
+                }
             })
             .catch((error) => {
                 console.log(error)
@@ -54,11 +56,13 @@ function AccountInfoManagement() {
                     <input
                         type="password"
                         onChange={(e) => setPasswordValue(e.target.value)}
+                        aria-label="zone de saisie de votre mot de passe"
                     />
                     <button
                         type="submit"
                         onClick={toggleManagementInput}
                         className="submit-pass-button"
+                        aria-label="accès aux fonctions d'administration via vérification du mot de passe"
                     >
                         <FontAwesomeIcon icon="fa-solid fa-wrench" size="2x" />
                     </button>

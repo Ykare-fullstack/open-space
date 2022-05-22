@@ -58,6 +58,7 @@ function PostAppraisalFrame(props) {
                                 setLike((like) => like + 1)
                             }}
                             className="appraisal-button"
+                            aria-label="aimer le post"
                         >
                             <p>
                                 <FontAwesomeIcon
@@ -66,10 +67,10 @@ function PostAppraisalFrame(props) {
                                 />
                             </p>
                         </button>
-                        <p>{like}</p>
+                        <p aria-label="nombre de like">{like}</p>
                     </div>
                     <div className="dislike-wrapper">
-                        <p>{dislike}</p>
+                        <p aria-label="nombre de dislike">{dislike}</p>
                         <button
                             type="submit"
                             onClick={() => {
@@ -78,6 +79,7 @@ function PostAppraisalFrame(props) {
                                 setDislike((dislike) => dislike + 1)
                             }}
                             className="appraisal-button"
+                            aria-label="ne pas aimer le post"
                         >
                             <p>
                                 <FontAwesomeIcon
@@ -104,6 +106,11 @@ function PostAppraisalFrame(props) {
                                     ? 'appraisal-button'
                                     : 'appraisal-button-disabled-check-red appraisal-button'
                             }
+                            aria-label={
+                                appraisal === 1
+                                    ? 'ne plus aimer la publication'
+                                    : 'bouton désactivé'
+                            }
                         >
                             <p>
                                 <FontAwesomeIcon
@@ -128,6 +135,11 @@ function PostAppraisalFrame(props) {
                                 appraisal === 1
                                     ? 'appraisal-button'
                                     : 'appraisal-button-disabled-check-blue appraisal-button'
+                            }
+                            aria-label={
+                                appraisal === 1
+                                    ? 'ne plus disliker la publication'
+                                    : 'bouton désactivé'
                             }
                         >
                             <p>
