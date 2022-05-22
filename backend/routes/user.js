@@ -19,7 +19,7 @@ router.post('/check', authgamma, userCtrl.checkUserPass)
 //recherche d'utilisateurs 
 //affichage des informations du compte utilisateur
 router.get('/gu1/:userId', authalpha, userCtrl.getUserInfo)
-router.get('/gu2/:usersearch', authalpha, userCtrl.researchUser)
+router.get('/gu2/:usersearch?', authalpha, userCtrl.researchUser)
 router.get('/gu3',authalpha, userCtrl.getViewerInfo)
 
 //route de suppression de compte utilisateur et toutes autres ressources associées

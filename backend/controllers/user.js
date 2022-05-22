@@ -14,41 +14,45 @@ app.use(express.urlencoded({ extended : true }));
 //module de création de compte (et initialisation du role)
 exports.signup = (req, res, next)=> {
 
- 
   const userEmail = req.body.email
   const userFirstname = req.body.firstname
   const userLastname = req.body.lastname
   const blankPicture= `${req.protocol}://${req.get('host')}/images/blank-profile-picture.png`
-
-  bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-          
-          db.query("INSERT INTO users (password, email, firstname, lastname, profilepicture) VALUES (?,?,?,?,?)", [hash, userEmail, userFirstname, userLastname, blankPicture ], (err) => {
-            if(err)
+  if(!userEmail || userEmail ===''||!userFirstname || userFirstname ===''|| !userLastname || userLastname ===''||!req.body.password || req.body.password ===''|| req.body.password.length>40 || userEmail.length>40 || userFirstname.length>40|| userLastname.length>40)
+  {
+    res.status(400).send("la création d'un utilisateur nécessite des informations valides",{created:false})
+  }
+  else{
+    bcrypt.hash(req.body.password, 10)
+    .then(hash => {
+      db.query("INSERT INTO users (password, email, firstname, lastname, profilepicture) VALUES (?,?,?,?,?)", [hash, userEmail, userFirstname, userLastname, blankPicture ], (err) => {
+        if(err)
+        {
+          res.status(400).send({created:false});
+        }
+        else{
+          db.query("SELECT idusers FROM users ORDER BY idusers DESC LIMIT 1", (error, result) => {
+            if(error)
             {
-              res.status(400).send({created:false});
+              console.log(error);
             }
             else{
-              db.query("SELECT idusers FROM users ORDER BY idusers DESC LIMIT 1", (error, result) => {
-                if(error)
-                {
-                  console.log(error);
+              db.query("INSERT INTO role (iduser,role) VALUES (?,1)", result[0].idusers, (err) => {
+                if(err){
+                  console.log(err)
+                  
                 }
                 else{
-                  db.query("INSERT INTO role (iduser,role) VALUES (?,1)", result[0].idusers, (err) => {
-                    if(err){
-                      console.log(err)
-                      
-                    }
-                    else{
-                      res.status(200).json({created :true})
-                    }
-                  })
+                  res.status(200).json({created :true})
                 }
               })
             }
-          })   
-  })
+          })
+        }
+      })   
+    })
+  }
+  
 };
 
 //-----------------------------------------------------------------------------------
@@ -69,13 +73,22 @@ exports.login = (req, res, next) => {
     }
     else
     { 
-      if(result[0])
+      if(!result[0])
       {
-      console.log('RESULTAT OBTENU DANS LA BDD') 
+        setTimeout((() => {
+          return  res.status(403).send({ access: false })
+        }), 2700)  
+      }
+      else
+      { 
+        console.log('RESULTAT OBTENU DANS LA BDD') 
         bcrypt.compare(userPassword, result[0].password)
           .then(valid => {
-            if (!valid) {
-              res.status(401).send({ access: false });
+            if (!valid) { 
+              setTimeout((() => {
+                return   res.status(403).send({ access: false });
+              }), 2700)
+             
             }
             else{
               const iduser = result[0].idusers.toString()
@@ -87,25 +100,24 @@ exports.login = (req, res, next) => {
                   res.status(401).send({ access: false });
                 }
                 else{
-                  res.status(200).send({
-                    access: true,
-                    userId: iduser,
-                    role: resultrole[0].role,
-                    firstname: result[0].firstname,
-                    lastname: result[0].lastname,
-                    description: result[0].description,
-                    profilepicture: result[0].profilepicture,
-                    token: jwt.sign({ userId: result[0].idusers,
-                    role: resultrole[0].role },'RANDOM_TOKEN_SECRET',{ expiresIn: '24h' })
-                  })
+                  setTimeout((() => {
+                    return   res.status(200).send({
+                      access: true,
+                      userId: iduser,
+                      role: resultrole[0].role,
+                      firstname: result[0].firstname,
+                      lastname: result[0].lastname,
+                      description: result[0].description,
+                      profilepicture: result[0].profilepicture,
+                      token: jwt.sign({ userId: result[0].idusers,
+                      role: resultrole[0].role },'FranK_HerberT_1965_Dune',{ expiresIn: '24h' })
+                    });
+                  }), 2700)
+                  
                 }
               })  
             }
           })
-      }
-      else
-      {
-        res.status(400).send({ access: false });
       }
     }
   })
@@ -196,23 +208,24 @@ exports.getViewerInfo = (req, res, next) => {
 exports.updateUserPass = (req, res, next) => {
   const userId =  req.auth.userId
   const pass = req.body.pass
-  bcrypt.hash(pass, 10)
-  .then((hash) => {
-    if(!pass){
-      res.status('401').send('erreur : pass non envoyé vers api')
-    }
-    else{
-      db.query('UPDATE users SET password=? WHERE idusers=?', [hash, userId], (err) =>{
-        if (err) {
-          res.status('401').send(err.message);
-        }
-        else{
-          res.status('200').send("password de l'utilisateur mise à jour")
-        }
+  if(!pass||pass===''||pass.length>40)
+  {
+    res.status('401').send('mot de passe non valide')
+  }
+  else
+  {
+    bcrypt.hash(pass, 10)
+      .then((hash) => {
+          db.query('UPDATE users SET password=? WHERE idusers=?', [hash, userId], (err) =>{
+            if (err) {
+              res.status('401').send(err.message);
+            }
+            else{
+              res.status('200').send("password de l'utilisateur mise à jour")
+            }
+          }) 
       })
-      
-    }
-  })
+  }
 }
 
 //-----------------------------------------------------------------------------------
@@ -220,31 +233,38 @@ exports.checkUserPass = (req, res, next) => {
   const userId =req.body.userId
   const userPassword = req.body.pass
   db.query("SELECT * FROM users WHERE idusers= ?", userId, (err, result) =>{
-
     if(err)
     {
       console.log('ERREUR DE QUERRY')
-      res.status(401).send({ message: 'erreur de querry' });
+      setTimeout((() => {
+        return   res.status(401).json({ message: 'erreur de querry',check:false});
+      }), 2700)
+      
     }
     else
     { 
-      if(result[0])
+      if(!result[0])
       { 
-        bcrypt.compare(userPassword, result[0].password)
-          .then(valid => {
-            if (!valid) {
-              res.status(200).json({check:false  
-              });
-            }
-            else{
-              res.status(200).json({check:true});
-            }
-          })
+        setTimeout((() => {
+          return   res.status(200).json({message: "pas d'utilisateur à cet Id",check:false});
+        }), 2700)
+        
       }
       else
       {
-        res.status(200).json({check:false  
-        });
+        bcrypt.compare(userPassword, result[0].password)
+          .then(valid => {
+            if (!valid) {
+              setTimeout((() => {
+                return   res.status(200).json({ message: 'mot de passe invalide',check:false});
+              }), 2700)
+            }
+            else{
+              setTimeout((() => {
+                return   res.status(200).json({check:true});
+              }), 2700)
+            }
+          })
       }
     }
   })
@@ -252,7 +272,7 @@ exports.checkUserPass = (req, res, next) => {
 
 //-----------------------------------------------------------------------------------
 exports.deleteUser = (req, res, next) => {
-  const userId =  req.auth.userId
+  const userId =  req.body.userId
   
   db.query("DELETE FROM users WHERE idusers=?", userId, (err)=>{
     if (err) {
@@ -326,7 +346,7 @@ exports.deleteUser = (req, res, next) => {
 
 //-----------------------------------------------------------------------------------
 exports.updateUserPicture = (req, res, next) => {
-  //suppression de l'anienne photo de profil et ajout de la nouvelle
+  //suppression de l'ancienne photo de profil et ajout de la nouvelle
   const userId =  req.auth.userId
   const adressPicture = `${req.protocol}://${req.get('host')}/images/${req.files[0].filename}`
   console.log(userId)
@@ -349,13 +369,16 @@ exports.updateUserPicture = (req, res, next) => {
       }
       else{
         const filename = result[0].profilepicture;
-        fs.unlink(`images/${filename.split('/images/')[1]}`, (err => {
+        if(!filename.split('/images/')[1]==='blank-profile-picture.png')
+        {
+          fs.unlink(`images/${filename.split('/images/')[1]}`, (err => {
             if (err) console.log(err);
             else {
               console.log("Deleted file in images directory")
             
             }
-        }));
+          })
+        )}  
       }      
     })
   
@@ -366,7 +389,6 @@ exports.updateUserPicture = (req, res, next) => {
       else{
         console.log("update de user OK")
       }
-
     })
     db.query("INSERT INTO pictures (url, iduser, isprofile) VALUES (?,?,1)", [adressPicture, userId], (err) => {
       if (err) {
@@ -385,7 +407,7 @@ exports.updateUserDescription = (req, res, next) => {
   const description = req.body.description
 
 
-  if(!description){
+  if(!description||description===''||description.length>40){
     res.status('401').send('erreur : description non envoyé vers api')
   }
   else{
@@ -401,34 +423,41 @@ exports.updateUserDescription = (req, res, next) => {
   }
 }
 
-exports.researchUser = (req,res,next )=> {
-  let resultBuffer= []
-  //récupération des critères de recherche dans les paramètres
-  const searchstring = req.params.usersearch.split('&')
-    
-  for (let i = 0; i < searchstring.length; i++) {
-    searchstring[i] =`%${searchstring[i]}%` 
+exports.researchUser = (req, res, next )=> {
+  if(!req.params.usersearch||req.params.usersearch>300)
+  {
+    res.status(200)
   }
-  let eta1 = searchstring.length
-  for (let j = 0; j < searchstring.length; j++) {
-    db.query('SELECT idusers, description, firstname, lastname, profilepicture FROM users WHERE description LIKE ? OR firstname LIKE ? OR lastname LIKE ?', [searchstring[j],searchstring[j],searchstring[j]], (err, resultuser) =>{
-      if(err){
-        res.status(400).json({err})}
-      else{
-        if(resultuser.length !=0){
-          for (let k = 0; k < resultuser.length; k++) {
-            resultBuffer.push(resultuser[k])
-          }
-          eta1--
-          if(eta1 === 0){
-            res.status(200).json(resultBuffer)
-          }
-        }
+  else
+  {
+    let resultBuffer= []
+    //récupération des critères de recherche dans les paramètres
+    const searchstring = req.params.usersearch.split('&')
+      
+    for (let i = 0; i < searchstring.length; i++) {
+      searchstring[i] =`%${searchstring[i]}%` 
+    }
+    let eta1 = searchstring.length
+    for (let j = 0; j < searchstring.length; j++) {
+      db.query('SELECT idusers, description, firstname, lastname, profilepicture FROM users WHERE description LIKE ? OR firstname LIKE ? OR lastname LIKE ?', [searchstring[j],searchstring[j],searchstring[j]], (err, resultuser) =>{
+        if(err){
+          res.status(400).json({err})}
         else{
-          res.status(200)
-        }      
-      }
-    })       
+          if(resultuser.length !=0){
+            for (let k = 0; k < resultuser.length; k++) {
+              resultBuffer.push(resultuser[k])
+            }
+            eta1--
+            if(eta1 === 0){
+              res.status(200).json(resultBuffer)
+            }
+          }
+          else{
+            res.status(200)
+          }      
+        }
+      })       
+    }
   }
 }
 

@@ -10,7 +10,7 @@ const multer = require('../middleware/multer-config')
 //publications d'un utilisateur spécifique
 //obtention de la publication suivante dans la liste (scroll infini)
 //Obtention d'une publication unique via ID
-router.get('/gp1/:postsearch', authalpha, publicationCtrl.searchPublication)
+router.get('/gp1/:postsearch?', authalpha, publicationCtrl.searchPublication)
 router.get('/gp2/:userId', authalpha, publicationCtrl.getAllPublicationFromUser)
 router.get('/gp3/:category/:lastpostid',authalpha, publicationCtrl.getNextPublication )
 router.get('/gp4/:postid',authalpha, publicationCtrl.getPublication )

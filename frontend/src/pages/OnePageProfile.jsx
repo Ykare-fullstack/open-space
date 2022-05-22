@@ -72,9 +72,9 @@ function OnePageProfile() {
         e.preventDefault()
         let token = sessionStorage.getItem('token')
         const url = 'http://localhost:3001/api/user/'
-        let authPayload = { userId: userData.userId }
+        let authPayload = { userId: userId }
         let deleteUser = {
-            method: 'PUT',
+            method: 'DELETE',
             body: JSON.stringify(authPayload),
             headers: new Headers({
                 'content-type': 'application/JSON',
@@ -85,7 +85,7 @@ function OnePageProfile() {
             .then(() => {
                 sessionStorage.clear()
                 setLoginStatus(false)
-                navigate('/login')
+                navigate('/')
             })
             .catch((error) => {
                 console.log(error)

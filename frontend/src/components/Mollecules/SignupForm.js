@@ -2,6 +2,7 @@ import '../../styles/Mollecules/SignupForm.css'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 //formulaire de création de compte : Post les infos utilisateurs saisies à l'api pour vérification d'identité
 //en cas de succès on enregistre le nouvel utilisateur dans la BDD et on renvoi vers la page de Login
@@ -68,7 +69,7 @@ function SignupForm() {
                 console.log('erreur')
             })
     }
-
+    console.log(isEmailValid(emailValue))
     return (
         <div className="signup-form-frame">
             <h2>
@@ -78,27 +79,63 @@ function SignupForm() {
 
             <form className="signup-form-input-frame">
                 <p>Adresse email</p>
-                <input
-                    type="email"
-                    value={emailValue}
-                    onChange={(e) => {
-                        setEmailValue(e.target.value)
-                        console.log(isEmailValid(e.target.value))
-                    }}
-                    className="identification-textarea"
-                />
 
+                <div className="signup-form-input-title">
+                    <input
+                        type="email"
+                        value={emailValue}
+                        onChange={(e) => {
+                            setEmailValue(e.target.value)
+                        }}
+                        className="identification-textarea"
+                        maxLength="40"
+                    />
+                    {isEmailValid(emailValue) ? (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-check"
+                            size="1x"
+                            color="green"
+                            className="check-icon"
+                        />
+                    ) : (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-circle-xmark"
+                            size="1x"
+                            color="rgba(210, 80, 90, 1)"
+                            className="check-icon"
+                        />
+                    )}
+                </div>
                 <p>Mot de passe</p>
-                <input
-                    id="password"
-                    type="password"
-                    value={passwordValue}
-                    onChange={(e) => {
-                        setPasswordValue(e.target.value)
-                        console.log(isPasswordValid(e.target.value))
-                    }}
-                    className="identification-textarea"
-                />
+
+                <div className="signup-form-input-title">
+                    <input
+                        id="password"
+                        type="password"
+                        value={passwordValue}
+                        onChange={(e) => {
+                            setPasswordValue(e.target.value)
+                            console.log(isPasswordValid(e.target.value))
+                        }}
+                        className="identification-textarea"
+                        maxLength="40"
+                    />
+                    {isPasswordValid(passwordValue) ? (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-check"
+                            size="1x"
+                            color="green"
+                            className="check-icon"
+                        />
+                    ) : (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-circle-xmark"
+                            size="1x"
+                            color="rgba(210, 80, 90, 1)"
+                            className="check-icon"
+                        />
+                    )}
+                </div>
                 {document.activeElement &&
                 document.activeElement.id === 'password' ? (
                     <div>
@@ -151,13 +188,32 @@ function SignupForm() {
                 ) : null}
 
                 <p>Saisir le mot de passe à nouveau</p>
-                <input
-                    type="password"
-                    id="password-verif"
-                    value={passwordValueVerif}
-                    onChange={(e) => setPasswordValueVerif(e.target.value)}
-                    className="identification-textarea"
-                />
+
+                <div className="signup-form-input-title">
+                    <input
+                        type="password"
+                        id="password-verif"
+                        value={passwordValueVerif}
+                        onChange={(e) => setPasswordValueVerif(e.target.value)}
+                        className="identification-textarea"
+                        maxLength="40"
+                    />
+                    {isPasswordValid(passwordValueVerif) ? (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-check"
+                            size="1x"
+                            color="green"
+                            className="check-icon"
+                        />
+                    ) : (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-circle-xmark"
+                            size="1x"
+                            color="rgba(210, 80, 90, 1)"
+                            className="check-icon"
+                        />
+                    )}
+                </div>
                 {document.activeElement &&
                 document.activeElement.id === 'password-verif' ? (
                     <div>
@@ -168,19 +224,58 @@ function SignupForm() {
                         )}
                     </div>
                 ) : null}
+
                 <p>Prénom</p>
-                <input
-                    value={firstnameValue}
-                    onChange={(e) => setFirstnameValue(e.target.value)}
-                    className="identification-textarea"
-                />
+
+                <div className="signup-form-input-title">
+                    <input
+                        value={firstnameValue}
+                        onChange={(e) => setFirstnameValue(e.target.value)}
+                        className="identification-textarea"
+                        maxLength="40"
+                    />
+                    {isFirstnameValid(firstnameValue) ? (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-check"
+                            size="1x"
+                            color="green"
+                            className="check-icon"
+                        />
+                    ) : (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-circle-xmark"
+                            size="1x"
+                            color="rgba(210, 80, 90, 1)"
+                            className="check-icon"
+                        />
+                    )}
+                </div>
 
                 <p>Nom de famille</p>
-                <input
-                    value={lastnameValue}
-                    onChange={(e) => setLastnameValue(e.target.value)}
-                    className="identification-textarea"
-                />
+
+                <div className="signup-form-input-title">
+                    <input
+                        value={lastnameValue}
+                        onChange={(e) => setLastnameValue(e.target.value)}
+                        className="identification-textarea"
+                        maxLength="40"
+                    />
+                    {isLastnameValid(lastnameValue) ? (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-check"
+                            size="1x"
+                            color="green"
+                            className="check-icon"
+                        />
+                    ) : (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-circle-xmark"
+                            size="1x"
+                            color="rgba(210, 80, 90, 1)"
+                            className="check-icon"
+                        />
+                    )}
+                </div>
                 {isEmailValid(emailValue) &&
                 isFirstnameValid(firstnameValue) &&
                 isLastnameValid(lastnameValue) &&

@@ -7,7 +7,16 @@
     height: 200px;
 }
 #login-submit-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 3%;
+}
+#login-submit-button:hover {
+    color: white;
+}
+#login-submit-button-icon:hover {
+    color: white;
 }
 .identification-form-frame input {
     margin-bottom: 15px;

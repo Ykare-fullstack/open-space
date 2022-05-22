@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState, useContext } from 'react'
 import { LoginContext } from '../../contexts'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //formulaire d'identification : Post les infos utilisateurs saisies à l'api pour vérification d'identité
 //en cas de succès on passe les infos utilisateurs publiques au contexte ainsi que le statut Login à "true"
 
@@ -14,6 +14,7 @@ function IdentificationForm() {
     const [passwordValue, setPasswordValue] = useState('')
     const { setLoginStatus, setUserData } = useContext(LoginContext)
     const [access, setAccess] = useState(true)
+    const [loading, setLoading] = useState(false)
     let navigate = useNavigate()
 
     function isEmailValid(value) {
@@ -29,6 +30,7 @@ function IdentificationForm() {
     //-----------------------------------------------------
     //fonction de test des infos de l'utilisateur via API
     function logintest(e) {
+        setLoading(true)
         e.preventDefault()
         let url = 'http://localhost:3001/api/user/login'
         //set du payload avec les infos utilisateurs saisies
@@ -80,6 +82,7 @@ function IdentificationForm() {
                         })
                 } else {
                     setAccess(false)
+                    setLoading(false)
                 }
             })
     }
@@ -105,7 +108,17 @@ function IdentificationForm() {
                     className="submit-button"
                     id="login-submit-button"
                 >
-                    Envoyer
+                    {loading ? (
+                        <FontAwesomeIcon
+                            icon="fa-solid fa-spinner"
+                            size="3x"
+                            spin
+                            color="rgba(10, 30, 70, 1)"
+                            id="login-submit-button-icon"
+                        />
+                    ) : (
+                        'Envoyer'
+                    )}
                 </button>
             ) : (
                 <button

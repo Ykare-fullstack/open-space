@@ -8,10 +8,14 @@ import AccountInfoManagementInput from './AccountInfoManagementInput'
 //fonction d'afficahge du panneau de modification des informations utilisateurs
 //-------------------------------------------------------------------------------------------
 function AccountInfoManagement() {
+    const [validPass, setValidPass] = useState(true)
     const [showing, setShowing] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [passwordValue, setPasswordValue] = useState('')
     const { userData } = useContext(LoginContext)
+
     function toggleManagementInput() {
+        setLoading(true)
         const url = 'http://localhost:3001/api/user/check'
         const token = sessionStorage.getItem('token')
         const authPayload = {
@@ -30,8 +34,13 @@ function AccountInfoManagement() {
             .then((response) => response.json())
             .then((res) => {
                 console.log(res.check)
-                if (res.check) setShowing((v) => !v)
-                else {
+                if (res.check) {
+                    setValidPass(true)
+                    setLoading(false)
+                    setShowing((v) => !v)
+                } else {
+                    setValidPass(false)
+                    setLoading(false)
                 }
             })
             .catch((error) => {
@@ -50,7 +59,7 @@ function AccountInfoManagement() {
             ) : (
                 <div>
                     <p>
-                        veuillez saisir votre mot de passe afin d'accéder aux
+                        Veuillez saisir votre mot de passe afin d'accéder aux
                         options d'administrations du compte
                     </p>
                     <input
@@ -58,15 +67,51 @@ function AccountInfoManagement() {
                         onChange={(e) => setPasswordValue(e.target.value)}
                         aria-label="zone de saisie de votre mot de passe"
                     />
-                    <button
-                        type="submit"
-                        onClick={toggleManagementInput}
-                        className="submit-pass-button"
-                        aria-label="accès aux fonctions d'administration via vérification du mot de passe"
-                    >
-                        <FontAwesomeIcon icon="fa-solid fa-wrench" size="2x" />
-                    </button>
+                    {passwordValue === '' ? (
+                        <button
+                            type="submit"
+                            className="submit-pass-button-disabled"
+                            aria-label="accès aux fonctions d'administration via vérification du mot de passe"
+                            disabled
+                        >
+                            {loading ? (
+                                <FontAwesomeIcon
+                                    icon="fa-solid fa-spinner"
+                                    size="2x"
+                                    spin
+                                />
+                            ) : (
+                                <FontAwesomeIcon
+                                    icon="fa-solid fa-wrench"
+                                    size="2x"
+                                />
+                            )}
+                        </button>
+                    ) : (
+                        <button
+                            type="submit"
+                            onClick={toggleManagementInput}
+                            className="submit-pass-button"
+                            aria-label="accès aux fonctions d'administration via vérification du mot de passe"
+                        >
+                            {loading ? (
+                                <FontAwesomeIcon
+                                    icon="fa-solid fa-spinner"
+                                    size="2x"
+                                    spin
+                                />
+                            ) : (
+                                <FontAwesomeIcon
+                                    icon="fa-solid fa-wrench"
+                                    size="2x"
+                                />
+                            )}
+                        </button>
+                    )}
                 </div>
+            )}
+            {validPass ? null : (
+                <p className="invalid-pass-text">mot de passe non valide</p>
             )}
         </div>
     )

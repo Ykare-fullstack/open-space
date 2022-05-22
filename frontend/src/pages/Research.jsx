@@ -66,7 +66,7 @@ function Research() {
                     <div className="post-search-frame">
                         <h3>Recherche de publication :</h3>
                         <textarea
-                            maxLength="500"
+                            maxLength="300"
                             onChange={(e) => {
                                 setPostSearch(`${e.target.value}`)
                             }}
@@ -99,7 +99,7 @@ function Research() {
                     <div className="user-search-frame">
                         <h3>Recherche d'utilisateur :</h3>
                         <textarea
-                            maxLength="500"
+                            maxLength="300"
                             onChange={(e) => {
                                 setUserSearch(`${e.target.value}`)
                                 console.log(userSearch)

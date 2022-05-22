@@ -7,15 +7,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
 
+//module d'insertion l'état connecté de l'utilisateur
 exports.checkin = (req,res,next) =>{
     const iduser = req.auth.userId
     db.query('DELETE FROM checkedin WHERE iduser=?', iduser, (err)=>{
         if(err){
-            console.log('erreur insertion SQL')}
+            console.log('erreur de suppression checkin')}
         else{
             db.query('INSERT INTO checkedin (iduser,checkedintime) VALUES (?,NOW())', iduser, (err)=>{
                 if(err)
-                    res.status(400).send('erreur de  DELETE querry')
+                    res.status(400).send("erreur d'insertion checkin")
                 else
                     res.status(200).send({authenticated: true})
             })
@@ -23,6 +24,7 @@ exports.checkin = (req,res,next) =>{
     })
     
 }
+//module de vérification pour persistance de connexion
 exports.ischeckedin = (req,res,next) =>{
     
     const userId = req.auth.userId
@@ -39,6 +41,7 @@ exports.ischeckedin = (req,res,next) =>{
         }    
     })   
 }
+//logout
 exports.checkout = (req,res,next) =>{
     const iduser = req.auth.userId
     db.query('DELETE FROM checkedin WHERE iduser=?',iduser, (err) =>{

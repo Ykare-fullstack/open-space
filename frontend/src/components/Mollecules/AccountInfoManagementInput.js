@@ -18,7 +18,7 @@ function AccountInfoManagementInput(props) {
     const [passwordValueVerif, setPasswordValueVerif] = useState('')
 
     function isDescriptionValid(value) {
-        return /^[a-zA-Z0-9àäâéèêëïîöôûüç'"?! .-]+$/.test(value)
+        return /^[a-zA-Z0-9àäâéèêëïîöôûüç'"?!()&=@ .-]+$/.test(value)
     }
 
     //---------------------------------------------------------
@@ -181,7 +181,9 @@ function AccountInfoManagementInput(props) {
                         Confirmer
                     </button>
                 ) : (
-                    <button disabled={true}>erreur de saisie</button>
+                    <button className="submit-button-wrong" disabled={true}>
+                        erreur de saisie
+                    </button>
                 )}
             </div>
             <div className="account-info-management-input-miniframe">
@@ -217,6 +219,7 @@ function AccountInfoManagementInput(props) {
                     className="password-input"
                     id="password"
                     aria-label="zone de saisie de votre nouveau mot de passe"
+                    maxLength="40"
                 />
                 {document.activeElement &&
                 document.activeElement.id === 'password' ? (
@@ -268,14 +271,25 @@ function AccountInfoManagementInput(props) {
                         }
                     </div>
                 ) : null}
-                <p>Confirmation saisie du nouveau mot de passe</p>
+                <p>Confirmation de saisie du nouveau mot de passe</p>
                 <input
                     type="password"
                     onChange={(e) => setPasswordValueVerif(e.target.value)}
                     className="password-input"
-                    id="password"
+                    id="password-verif"
                     aria-label="zone de répétition de votre nouveau mot de passe"
+                    maxLength="40"
                 />
+                {document.activeElement &&
+                document.activeElement.id === 'password-verif' ? (
+                    <div>
+                        {passwordValueVerif === passwordValue ? (
+                            <p className="matching">correspond</p>
+                        ) : (
+                            <p className="not-matching">ne correspond pas</p>
+                        )}
+                    </div>
+                ) : null}
                 {isPasswordValid(passwordValue) &&
                 passwordValue === passwordValueVerif ? (
                     <button

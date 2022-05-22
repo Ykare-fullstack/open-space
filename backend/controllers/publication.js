@@ -16,7 +16,11 @@ exports.createPublication = (req, res, next) =>{
     const category = req.body.category
     const userId =  req.auth.userId
     let multiValues = []
-    
+if(!description||description===''||description.length>500)
+{
+    res.status(400).send('une description est nécessaire pour chaque post')
+}
+else{
     db.query("INSERT INTO posts (description, category, iduser, creationdate) VALUES (?, ?, ?, NOW())", [ description, category, userId ], (err,result) => {
         if(err){
             console.log("erreur 1")
@@ -42,7 +46,9 @@ exports.createPublication = (req, res, next) =>{
             }
             
         }  
-    })   
+    }) 
+}
+      
 }
 
 exports.deletePublication = (req, res, next) =>{
@@ -306,196 +312,211 @@ exports.updatePublication = (req, res, next) =>{
     const description = req.body.description
     const picturesInfo = JSON.parse(req.body.remainingpictures)
     console.log(picturesInfo)
- 
-    let multiValues = []
-    db.query("UPDATE posts SET description = ? WHERE idpost=?",[description, postId],(err)=>{
-        if(err){
-            res.status(400).send(err)}
-        else{
-            if(picturesInfo.length === 0){
-                db.query("SELECT url FROM pictures WHERE idpost=?", postId, (err,result)=>{
-                    if(err){
-                        res.status(400).send(err)
-                    }
-                    else{
-                        if(result.length == 0){
-                            console.log('pas de photos à supprimer')
-                            if (req.files.length !== 0) {
-                                for (const single_file of req.files) {
-                            
-                                pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
-                                pictureData = [pictureAdress, userId, 0, postId]
-                                multiValues.push(pictureData)
-                                }
-                                db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (err) => {
-                                    if(err){
-                                        console.log({error: err})
-                                    }
-                                    else{
-                                        res.status(200).send('post modifié')
-                                    }
-                                }) 
-                            }
-                            else {
-                                res.status(200).send('post modifié')
-                            }
-                        }
-                        else{
-                            console.log('il y a des photos a supprimer')
-                            result.forEach(picture => {
-                                console.log(`images/${picture.url.split('/images/')[1]}`)
-                                fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
-                                if (err) console.log(err);
-                                }));
-                            });
-                            db.query("DELETE FROM pictures WHERE idpost=? ",postId, (err)=>{
-                                if(err){
-                                    res.status(400).send(err)
-                                }
-                                else{
-                                    if (req.files.length !== 0) {
-                                        for (const single_file of req.files) {
-                                    
-                                        pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
-                                        pictureData = [pictureAdress, userId, 0, postId]
-                                        multiValues.push(pictureData)
-                                        }
-                                        db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (err) => {
-                                            if(err){
-                                                console.log({error: err})
-                                            }
-                                            else{
-                                                res.status(200).send('post modifié')
-                                            }
-                                        }) 
-                                    }
-                                    else {
-                                        res.status(200).send('post modifié')
-                                    }
-                                }    
-                            })  
-                        }      
-                    }
-                })
-            }
+    if(!description||description===''||description.length>500||!userId||userId==='')
+    {
+        res.status(400).send('une description est nécessaire pour chaque post')
+    }
+    else
+    {
+        let multiValues = []
+        db.query("UPDATE posts SET description = ? WHERE idpost=?",[description, postId],(err)=>{
+            if(err){
+                res.status(400).send(err)}
             else{
-                db.query("SELECT url FROM pictures WHERE idpost=? AND id NOT IN (?)", [postId,picturesInfo], (err,result)=>{
-                    if(err){
-                        res.status(400).send(err)
-                    }
-                    else{
-                        if(result.length == 0){
-                            if (req.files.length !== 0) {
-                                for (const single_file of req.files) {
-                            
-                                pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
-                                pictureData = [pictureAdress, userId, 0, postId]
-                                multiValues.push(pictureData)
-                                }
-                                db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (err) => {
-                                    if(err){
-                                        console.log({error: err})
-                                    }
-                                    else{
-                                        res.status(200).send('post modifié')
-                                    }
-                                }) 
-                            }
-                            else {
-                                res.status(200).send('post modifié')
-                            }
+                if(picturesInfo.length === 0){
+                    db.query("SELECT url FROM pictures WHERE idpost=?", postId, (err,result)=>{
+                        if(err){
+                            res.status(400).send(err)
                         }
                         else{
-                            result.forEach(picture => {
-                                fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
-                                if (err) console.log(err);
-                                }));
-                            });
-                            db.query("DELETE FROM pictures WHERE idpost=? AND id NOT IN (?)", [postId,picturesInfo], (err,result)=>{
-                                if(err){
-                                    res.status(400).send(err)
+                            if(result.length == 0){
+                                console.log('pas de photos à supprimer')
+                                if (req.files.length !== 0) {
+                                    for (const single_file of req.files) {
+                                
+                                    pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
+                                    pictureData = [pictureAdress, userId, 0, postId]
+                                    multiValues.push(pictureData)
+                                    }
+                                    db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (err) => {
+                                        if(err){
+                                            console.log({error: err})
+                                        }
+                                        else{
+                                            res.status(200).send('post modifié')
+                                        }
+                                    }) 
                                 }
-                                else{
-                                    if (req.files.length !== 0) {
-                                        for (const single_file of req.files) {
-                                    
+                                else {
+                                    res.status(200).send('post modifié')
+                                }
+                            }
+                            else{
+                                console.log('il y a des photos a supprimer')
+                                result.forEach(picture => {
+                                    console.log(`images/${picture.url.split('/images/')[1]}`)
+                                    fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
+                                    if (err) console.log(err);
+                                    }));
+                                });
+                                db.query("DELETE FROM pictures WHERE idpost=? ",postId, (err)=>{
+                                    if(err){
+                                        res.status(400).send(err)
+                                    }
+                                    else{
+                                        if (req.files.length !== 0) {
+                                            for (const single_file of req.files) {
+                                        
                                             pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
                                             pictureData = [pictureAdress, userId, 0, postId]
                                             multiValues.push(pictureData)
+                                            }
+                                            db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (err) => {
+                                                if(err){
+                                                    console.log({error: err})
+                                                }
+                                                else{
+                                                    res.status(200).send('post modifié')
+                                                }
+                                            }) 
                                         }
-                                        db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (error) => {
-                                            if(err){
-                                                res.status(400).send(err)
-                                            }
-                                            else{
-                                                res.status(200).send('post modifié')
-                                            }
-                                        }) 
+                                        else {
+                                            res.status(200).send('post modifié')
+                                        }
+                                    }    
+                                })  
+                            }      
+                        }
+                    })
+                }
+                else{
+                    db.query("SELECT url FROM pictures WHERE idpost=? AND id NOT IN (?)", [postId,picturesInfo], (err,result)=>{
+                        if(err){
+                            res.status(400).send(err)
+                        }
+                        else{
+                            if(result.length == 0){
+                                if (req.files.length !== 0) {
+                                    for (const single_file of req.files) {
+                                
+                                    pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
+                                    pictureData = [pictureAdress, userId, 0, postId]
+                                    multiValues.push(pictureData)
                                     }
-                                    else {
-                                        res.status(200).send('post modifié')
-                                    }
+                                    db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (err) => {
+                                        if(err){
+                                            console.log({error: err})
+                                        }
+                                        else{
+                                            res.status(200).send('post modifié')
+                                        }
+                                    }) 
                                 }
-                            })  
-                        }  
-                    }
-                }) 
+                                else {
+                                    res.status(200).send('post modifié')
+                                }
+                            }
+                            else{
+                                result.forEach(picture => {
+                                    fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
+                                    if (err) console.log(err);
+                                    }));
+                                });
+                                db.query("DELETE FROM pictures WHERE idpost=? AND id NOT IN (?)", [postId,picturesInfo], (err,result)=>{
+                                    if(err){
+                                        res.status(400).send(err)
+                                    }
+                                    else{
+                                        if (req.files.length !== 0) {
+                                            for (const single_file of req.files) {
+                                        
+                                                pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
+                                                pictureData = [pictureAdress, userId, 0, postId]
+                                                multiValues.push(pictureData)
+                                            }
+                                            db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (error) => {
+                                                if(err){
+                                                    res.status(400).send(err)
+                                                }
+                                                else{
+                                                    res.status(200).send('post modifié')
+                                                }
+                                            }) 
+                                        }
+                                        else {
+                                            res.status(200).send('post modifié')
+                                        }
+                                    }
+                                })  
+                            }  
+                        }
+                    }) 
+                }
             }
-        }
-    })
+        })
+    }
+    
 }
 
 exports.searchPublication = (req, res, next) =>{
-    const searchstring = req.params.postsearch.split('&')
-    
-    let resultBuffer = []
-    for (let i = 0; i < searchstring.length; i++) {
-        if(!curatedLibrary.includes(searchstring[i]))
-        searchstring[i]=`%${searchstring[i]}%`    
-       
-        else{
-            searchstring.splice(i,1)
-        }             
+    console.log(req.params.postsearch)
+    if(!req.params.postsearch||req.params.postsearch.length>300)
+    {
+        res.status(200).send('paramètres de recherches invalides')
     }
-    let eta1 = searchstring.length
-    for (let j = 0; j < searchstring.length; j++) {
-
-        db.query('SELECT * FROM posts WHERE description LIKE ?', searchstring[j], (err, resultpost) =>{
-            if(err){
-                res.status(400).json({err})}
+    else
+    {
+        const searchstring = req.params.postsearch.split('&')
+        let resultBuffer = []
+        for (let i = 0; i < searchstring.length; i++) {
+            if(!curatedLibrary.includes(searchstring[i]))
+            searchstring[i]=`%${searchstring[i]}%`    
+        
             else{
-                if(resultpost.length!=0){
-                    for (let k = 0; k < resultpost.length; k++) {
-                        resultBuffer.push(resultpost[k])
-                      }
-                }
-                eta1--
-            }
-            if(eta1===0){
-                if(resultBuffer.length===0){
-                    res.status(200)
-                }
+                searchstring.splice(i,1)
+            }             
+        }
+        let eta1 = searchstring.length
+        for (let j = 0; j < searchstring.length; j++) {
+
+            db.query('SELECT * FROM posts WHERE description LIKE ?', searchstring[j], (err, resultpost) =>{
+                if(err){
+                    res.status(400).json({err})}
                 else{
-                    let eta2 = resultBuffer.length
-                    for (let index = 0; index < resultBuffer.length; index++) {
-                        idpost = resultBuffer[index].idpost
-                        db.query('SELECT * FROM pictures WHERE idpost=? LIMIT 1',resultBuffer[index].idpost, (error, resultpicture)=>{
-                            if(error){res.status(400).json({error})}
-                            else{
-                                if(resultpicture){ 
-                                    resultBuffer[index].picture=resultpicture
+                    if(resultpost.length!=0){
+                        for (let k = 0; k < resultpost.length; k++) {
+                            resultBuffer.push(resultpost[k])
+                        }
+                    }
+                    eta1--
+                }
+                if(eta1===0){
+                    if(resultBuffer.length===0){
+                        res.status(200)
+                    }
+                    else{
+                        let eta2 = resultBuffer.length
+                        for (let index = 0; index < resultBuffer.length; index++) {
+                            idpost = resultBuffer[index].idpost
+                            db.query('SELECT * FROM pictures WHERE idpost=? LIMIT 1',resultBuffer[index].idpost, (error, resultpicture)=>{
+                                if(error){res.status(400).json({error})}
+                                else{
+                                    if(resultpicture){ 
+                                        resultBuffer[index].picture=resultpicture
+                                    }
+                                    eta2--
+                                    if(eta2==0)
+                                    {      
+    
+                                        res.status(200).json(resultBuffer)
+                                    }
                                 }
-                                eta2--
-                                if(eta2==0)
-                                {      
- 
-                                    res.status(200).json(resultBuffer)
-                                }
-                            }
-                        })
+                            })
+                        }
                     }
                 }
-            }
-        })       
+            })       
+        }
     }
+    
 }

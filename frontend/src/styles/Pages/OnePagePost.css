@@ -9,12 +9,13 @@
 
 .one-page-post-frame {
     display: flex;
+    padding-bottom: 20px;
     background-color: white;
     border-radius: 25px;
     flex-direction: column;
     align-items: center;
-    max-width: 75%;
-    width: fit-content;
+    width: 75%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
     margin: 5%;
     transform: opacity(1);
     animation: 1.2s ease-out fadeIn 1;
@@ -44,8 +45,8 @@
     text-decoration: none;
 }
 .one-page-post-owner-profile-picture {
-    width: 100px;
-    height: 100px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     z-index: 1;
 }
@@ -74,6 +75,7 @@
 .one-page-post-frame > button:hover::after {
     content: 'supprimer la publication';
     background-color: #d2505a;
+    margin-left: 10px;
 }
 
 .delete-button {
@@ -82,7 +84,7 @@
     align-items: center;
     width: fit-content;
     height: fit-content;
-    padding: 5px;
+    padding: 15px;
     font-size: 20px;
     text-transform: uppercase;
     letter-spacing: 2.5px;
@@ -112,6 +114,14 @@
         width: 100%;
     }
     .one-page-post-frame {
-        width: 100%;
+        width: 95%;
+    }
+    .one-page-post-frame > button:hover::after {
+        content: 'supprimer la publication';
+
+        background-color: #d2505a;
+    }
+    .delete-button {
+        font-size: medium;
     }
 }

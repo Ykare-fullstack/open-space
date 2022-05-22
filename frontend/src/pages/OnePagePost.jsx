@@ -153,7 +153,7 @@ function OnePagePost() {
                             >
                                 <FontAwesomeIcon
                                     icon="fa-solid fa-trash-alt"
-                                    size="4x"
+                                    size="2x"
                                 />
                             </button>
                         ) : null}

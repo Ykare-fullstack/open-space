@@ -44,16 +44,27 @@ function PostCommentInputFrame(props) {
                 onChange={(e) => setNewComment(e.target.value)}
                 id="comment-input"
                 aria-label="zone de saisie de nouveaux commmentaire"
+                maxLength="400"
             />
-
-            <button
-                type="submit"
-                onClick={sendNewComment}
-                id="comment-submit"
-                aria-label="envoyer le commmentaire saisie"
-            >
-                <FontAwesomeIcon icon="fa-solid fa-paper-plane" size="1x" />
-            </button>
+            {newComment === '' ? (
+                <button
+                    type="submit"
+                    id="comment-submit-disabled"
+                    aria-label="envoyer le commmentaire saisit"
+                    disabled
+                >
+                    <FontAwesomeIcon icon="fa-solid fa-paper-plane" size="1x" />
+                </button>
+            ) : (
+                <button
+                    type="submit"
+                    onClick={sendNewComment}
+                    id="comment-submit"
+                    aria-label="envoyer le commmentaire saisit"
+                >
+                    <FontAwesomeIcon icon="fa-solid fa-paper-plane" size="1x" />
+                </button>
+            )}
         </div>
     )
 }

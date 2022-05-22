@@ -46,27 +46,31 @@ exports.postAppraisal = (req, res, next)  =>{
     const postId = req.body.postId
     const userId = req.body.userId
     const appraisal = req.body.appraisal
-    if(appraisal===-1){
-
-        db.query("DELETE FROM postappraisal WHERE iduser=? AND idpost=?",[userId, postId],(err)=>{
-            if(err){
-                console.log({error: err})
-            }
-            else{
-                res.status(200).send('appraisal registered')
-            } 
-        })
+    if(appraisal!==1 && appraisal!==0 && appraisal!==-1)
+    {
+        res.status(400).send("valeur d'évaluation de la publacation erronée",{like:1,dislike:0,neutre:-1})
     }
-    else{
-
-    
-        db.query("INSERT INTO postappraisal (idpost,iduser,appraisal) VALUE (?,?,?)",[postId, userId,appraisal],(err)=>{
-            if(err){
-                console.log({error: err})
-            }
-            else{
-                res.status(200).send('appraisal registered')
-            }
-        })
-    }
+    else
+    {
+        if(appraisal===-1){
+            db.query("DELETE FROM postappraisal WHERE iduser=? AND idpost=?",[userId, postId],(err)=>{
+                if(err){
+                    console.log({error: err})
+                }
+                else{
+                    res.status(200).send('appraisal registered')
+                } 
+            })
+        }
+        else{
+            db.query("INSERT INTO postappraisal (idpost,iduser,appraisal) VALUE (?,?,?)",[postId, userId,appraisal],(err)=>{
+                if(err){
+                    console.log({error: err})
+                }
+                else{
+                    res.status(200).send('appraisal registered')
+                }
+            })
+        }
+    } 
 }

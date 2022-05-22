@@ -63,7 +63,7 @@ function PostAppraisalFrame(props) {
                             <p>
                                 <FontAwesomeIcon
                                     icon="fa-solid fa-thumbs-up"
-                                    size="2x"
+                                    className="appraisal-icon"
                                 />
                             </p>
                         </button>
@@ -84,7 +84,7 @@ function PostAppraisalFrame(props) {
                             <p>
                                 <FontAwesomeIcon
                                     icon="fa-solid fa-thumbs-down"
-                                    size="2x"
+                                    className="appraisal-icon"
                                 />
                             </p>
                         </button>
@@ -115,7 +115,7 @@ function PostAppraisalFrame(props) {
                             <p>
                                 <FontAwesomeIcon
                                     icon="fa-solid fa-thumbs-up"
-                                    size="2x"
+                                    className="appraisal-icon"
                                 />
                             </p>
                         </button>
@@ -145,7 +145,7 @@ function PostAppraisalFrame(props) {
                             <p>
                                 <FontAwesomeIcon
                                     icon="fa-solid fa-thumbs-down"
-                                    size="2x"
+                                    className="appraisal-icon"
                                 />
                             </p>
                         </button>

@@ -10,7 +10,7 @@ function PostGenerator(props) {
     const [post, setPost] = useState({
         description: '',
         pictures: [],
-        category: '',
+        category: 'diverse',
     })
     const [updatedPictures, setUpdatedPictures] = useState([])
     const [picturesToSend, setPicturesToSend] = useState([])
@@ -126,24 +126,52 @@ function PostGenerator(props) {
 
             <div className="postgenerator-inputs">
                 <div className="postgenerator-file-selector">
-                    <label htmlFor="file-selector" id="file-selector-visible">
-                        <p>10 images maximum : </p>
-                        <FontAwesomeIcon
-                            icon="fa-solid fa-paperclip"
-                            size="2x"
+                    {updatedPictures.length > 19 ? (
+                        <label
+                            htmlFor="file-selector"
+                            id="file-selector-visible"
+                        >
+                            <p>20 images maximum en visualisation</p>
+                            <FontAwesomeIcon
+                                icon="fa-solid fa-circle-xmark"
+                                size="3x"
+                                color="rgba(210, 80, 90, 1)"
+                            />
+                        </label>
+                    ) : (
+                        <label
+                            htmlFor="file-selector"
+                            id="file-selector-visible"
+                        >
+                            <p>10 images maximum : </p>
+                            <FontAwesomeIcon
+                                icon="fa-solid fa-paperclip"
+                                size="2x"
+                            />
+                            <p>png / jpg / jpeg</p>
+                        </label>
+                    )}
+
+                    {updatedPictures.length > 19 ? (
+                        <input
+                            type="file"
+                            id="file-selector"
+                            accept="image/jpg, image/png, image/jpeg"
+                            name="file"
+                            disabled
                         />
-                        <p>png / jpg / jpeg</p>
-                    </label>
-                    <input
-                        type="file"
-                        id="file-selector"
-                        accept="image/jpg, image/png, image/jpeg"
-                        name="file"
-                        onChange={(e) => {
-                            updatePicturesDisplay(e)
-                        }}
-                        multiple
-                    />
+                    ) : (
+                        <input
+                            type="file"
+                            id="file-selector"
+                            accept="image/jpg, image/png, image/jpeg"
+                            name="file"
+                            onChange={(e) => {
+                                updatePicturesDisplay(e)
+                            }}
+                            multiple
+                        />
+                    )}
                 </div>
                 <div className="postgenerator-description-typer">
                     <label htmlFor="post-description" hidden>
@@ -156,6 +184,7 @@ function PostGenerator(props) {
                         onChange={(e) =>
                             setPost({ ...post, description: e.target.value })
                         }
+                        maxLength="500"
                     />
                 </div>
                 <div className="postgenerator-category-selector">

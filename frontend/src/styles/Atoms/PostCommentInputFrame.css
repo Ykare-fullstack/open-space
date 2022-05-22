@@ -6,6 +6,7 @@
 }
 #comment-input {
     resize: none;
+    font-family: 'Josefin Sans', sans-serif;
     width: 90%;
     font-size: large;
     height: 30px;
@@ -14,6 +15,9 @@
     border-radius: 5px;
 }
 #comment-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 40px;
     height: 40px;
     font-family: 'Roboto', sans-serif;
@@ -36,4 +40,23 @@
     box-shadow: 0px 10px 20px #0a1e46;
     color: #fff;
     transform: translateY(-2px);
+}
+
+#comment-submit-disabled {
+    width: 40px;
+    height: 40px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: grey;
+    background-color: #fff;
+    border: none;
+    border-radius: 15px;
+    justify-content: center;
+
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
 }

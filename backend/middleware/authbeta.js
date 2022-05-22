@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended : true }))
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization
-    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET')
+    const decodedToken = jwt.verify(token, 'FranK_HerberT_1965_Dune')
     const userId = decodedToken.userId
     const role = decodedToken.role
     req.auth = {userId}

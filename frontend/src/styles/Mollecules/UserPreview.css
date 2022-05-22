@@ -8,7 +8,10 @@
     margin: 1% 15px 0 15px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6);
     transition: all 0.3s ease 0s;
-    border: solid red 2px;
+}
+.user-link {
+    text-decoration: none;
+    color: rgba(10, 30, 70, 1);
 }
 .user-preview-wrapper:hover {
     box-shadow: 0px 10px 18px rgba(0, 0, 0, 0.6);
