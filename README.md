@@ -22,3 +22,45 @@ si la base de donnée ne reconnait pas l'utilisateur (mot de passe trop faible),
 dans le répertoire backend : **nodemon server**
 
 dans le répertoire frontend : **npm run start**
+
+## Liste des modules :
+
+
+Framework frontend
+[react](https://fr.reactjs.org/)
+
+Icones
+[fontawesome](https://fontawesome.com/v5/docs/web/use-with/react)
+
+Variables d'environnement
+[dotenv](https://www.npmjs.com/package/dotenv)
+
+Throttle/Debounce
+[underscore](https://underscorejs.org/)
+
+Runtime backend
+[node](https://nodejs.org/en/)
+
+Framework Backend
+[express](https://expressjs.com/fr/)
+
+Base de donnée
+[mysql]
+
+Securité
+[bcrypt](https://www.bcrypt.fr/)
+[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+
+Lecture de données entrantes
+[body-parser](https://www.npmjs.com/package/body-parser)
+
+Cross-origins
+[cors](https://www.npmjs.com/package/cors)
+
+Gestion des fichiers entrants    
+[multer](https://www.npmjs.com/package/multer)
+
+
+
+
+nodemon

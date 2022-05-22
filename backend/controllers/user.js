@@ -237,7 +237,6 @@ exports.checkUserPass = (req, res, next) => {
               });
             }
             else{
-
               res.status(200).json({check:true});
             }
           })
@@ -327,6 +326,7 @@ exports.deleteUser = (req, res, next) => {
 
 //-----------------------------------------------------------------------------------
 exports.updateUserPicture = (req, res, next) => {
+  //suppression de l'anienne photo de profil et ajout de la nouvelle
   const userId =  req.auth.userId
   const adressPicture = `${req.protocol}://${req.get('host')}/images/${req.files[0].filename}`
   console.log(userId)
@@ -403,6 +403,7 @@ exports.updateUserDescription = (req, res, next) => {
 
 exports.researchUser = (req,res,next )=> {
   let resultBuffer= []
+  //récupération des critères de recherche dans les paramètres
   const searchstring = req.params.usersearch.split('&')
     
   for (let i = 0; i < searchstring.length; i++) {

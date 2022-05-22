@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require ('cors')
 const fs = require('fs');
-
+//librairie d'exception dans la recherche
 const curatedLibrary = ['le','la','les','de','du','des','mon','ma','mes','et','ou','ton','ta','tes','son','sa','ses','un',"d'","l'","t'"]
 
 var db = require('../utils/MySqlConnector')
