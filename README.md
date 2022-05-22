@@ -9,7 +9,7 @@ dans le répertoire frontend : **npm install**
 
 ## Installation de la base de donnée et connexion :
 
-installer la base de données open-space via **constructor_open_space.sql** situé à la racine 
+installer la base de données open-space via **constructor_open_space.sql** situé à la racine (utilisation de MYSql worbench recommandée)
 
 changer les variables d'environnement relatives à votre connection de base de données dans le fichier **.env** dans le répertoire backend (voir **backend/utils/MySqlConnector.js** pour référence de connexion de l'API)  
 
@@ -45,10 +45,10 @@ Framework Backend
 [express](https://expressjs.com/fr/)
 
 Base de donnée  
-[mysql]
+[mysql](https://www.mysql.com/fr/)
 
 Securité  
-[bcrypt](https://www.bcrypt.fr/)
+[bcrypt](https://www.bcrypt.fr/)  
 [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 
 Lecture de données entrantes  
@@ -61,5 +61,5 @@ Gestion des fichiers entrants
 [multer](https://www.npmjs.com/package/multer)
 
 Outils de développement  
-[nodemon](https://www.npmjs.com/package/nodemon)
+[nodemon](https://www.npmjs.com/package/nodemon)  
 [prettier](https://prettier.io/)
