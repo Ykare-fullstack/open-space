@@ -26,41 +26,40 @@ dans le répertoire frontend : **npm run start**
 ## Liste des modules :
 
 
-Framework frontend
+Framework frontend  
 [react](https://fr.reactjs.org/)
 
-Icones
+Icones  
 [fontawesome](https://fontawesome.com/v5/docs/web/use-with/react)
 
-Variables d'environnement
+Variables d'environnement  
 [dotenv](https://www.npmjs.com/package/dotenv)
 
-Throttle/Debounce
+Throttle/Debounce  
 [underscore](https://underscorejs.org/)
 
-Runtime backend
+Runtime backend  
 [node](https://nodejs.org/en/)
 
-Framework Backend
+Framework Backend  
 [express](https://expressjs.com/fr/)
 
-Base de donnée
+Base de donnée  
 [mysql]
 
-Securité
+Securité  
 [bcrypt](https://www.bcrypt.fr/)
 [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 
-Lecture de données entrantes
+Lecture de données entrantes  
 [body-parser](https://www.npmjs.com/package/body-parser)
 
-Cross-origins
+Cross-origins  
 [cors](https://www.npmjs.com/package/cors)
 
 Gestion des fichiers entrants    
 [multer](https://www.npmjs.com/package/multer)
 
-
-
-
-nodemon
+Outils de développement  
+[nodemon](https://www.npmjs.com/package/nodemon)
+[prettier](https://prettier.io/)
