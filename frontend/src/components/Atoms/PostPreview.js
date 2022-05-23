@@ -1,7 +1,7 @@
 import '../../styles/Mollecules/PostPreview.css'
 import React from 'react'
 import { Link } from 'react-router-dom'
-
+//composant vignette de pré-visualisation de publication
 function PostPreview(props) {
     console.log(props.post)
     return (

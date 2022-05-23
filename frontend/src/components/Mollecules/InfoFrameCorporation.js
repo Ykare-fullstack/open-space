@@ -2,6 +2,7 @@ import React from 'react'
 import '../../styles/Mollecules/InfoFrame.css'
 import InfoTitle from '../Atoms/InfoTitle'
 
+//message général de groupomania
 function InfoFrameCorporation() {
     return (
         <div className="info-frame-wrapper">

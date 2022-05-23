@@ -77,7 +77,7 @@ function AccountInfoManagementInput(props) {
 
     //---------------------------------------------------------
     //fonction de modification de la photo de profil utilisateur (PUT)
-    // format mit sous format formData et envoyé à l'api (traitement via Multer)
+    //format mit sous format formData et envoyé à l'api (traitement via Multer)
     //userId envoyé via params pour vérification jwt
     //on modifie le userData avec la nouvelle adresse de l'image
     function submitPictureModif(e) {
@@ -106,7 +106,8 @@ function AccountInfoManagementInput(props) {
                 console.log({ error })
             })
     }
-
+    //---------------------------------------------------------
+    //fonction de modification du mot de passe
     function submitPassModif(e) {
         e.preventDefault()
         let token = sessionStorage.getItem('token')
@@ -132,11 +133,16 @@ function AccountInfoManagementInput(props) {
                 console.log(error)
             })
     }
-
+    //---------------------------------------------------------
+    //fonction de vérification du mot de passe via regex
     function isPasswordValid(value) {
         return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)
     }
 
+    //*options accessible via vérification du mot de passe*
+    //modification de la bio de l'utilisateur
+    //modification de la photo de profil de l'utilisateur
+    //modification du mot de passe de l'utilisateur
     return (
         <div className="account-info-management-input">
             <button

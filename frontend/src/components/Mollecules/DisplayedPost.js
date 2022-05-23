@@ -9,12 +9,15 @@ import { LoginContext } from '../../contexts/index'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+//composant de publication pour l'affichage
+//reçoit les informations relatives à la publication à afficher par PostDisplay
 function DisplayedPost(props) {
     const postId = props.post.idPost
     const ownerId = props.post.idOwner
 
     const token = sessionStorage.getItem('token')
     const { userData } = useContext(LoginContext)
+    //état initial avant fetch
     const [owner, setOwner] = useState({
         ownerId: 0,
         firstname: '',
@@ -29,6 +32,7 @@ function DisplayedPost(props) {
             authorization: token,
         }),
     }
+    //fetch des informations de l'auteur de la publication au premier rendu
     useEffect(() => {
         fetch(url, getOwnerInfo)
             .then((response) => response.json())
@@ -36,7 +40,8 @@ function DisplayedPost(props) {
                 setOwner(owner)
             })
     }, [])
-
+    //répartition des données par composant
+    //affichage de l'option de modification si role suffisant ou auteur
     return (
         <div className="post-frame">
             {owner.ownerId === 0 ? (

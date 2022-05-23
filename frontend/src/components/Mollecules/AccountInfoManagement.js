@@ -5,7 +5,7 @@ import { LoginContext } from '../../contexts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import AccountInfoManagementInput from './AccountInfoManagementInput'
 
-//fonction d'afficahge du panneau de modification des informations utilisateurs
+//fonction d'affichage du panneau de modification des informations utilisateurs
 //-------------------------------------------------------------------------------------------
 function AccountInfoManagement() {
     const [validPass, setValidPass] = useState(true)

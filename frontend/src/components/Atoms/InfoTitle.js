@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../styles/Atoms/InfoTitle.css'
-
+//composant de titre d'encart informatif
 function InfoTitle({ text }) {
     return (
         <div className="info-title-wrapper">

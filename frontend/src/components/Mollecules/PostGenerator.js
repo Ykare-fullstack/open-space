@@ -5,6 +5,10 @@ import { LoginContext } from '../../contexts/index'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 //-------------------------------------------------------------------------------------------
+//générateur de publication :
+//10 images max
+//description oligatoire
+//catégorie initiale : diverse
 function PostGenerator(props) {
     console.log(props.hasUpdated)
     const [post, setPost] = useState({
@@ -16,6 +20,7 @@ function PostGenerator(props) {
     const [picturesToSend, setPicturesToSend] = useState([])
     const { userData } = useContext(LoginContext)
     //---------------------------------------------------------
+    //fonction d'envoi du post crée via FormData
     function submitPost(e) {
         e.preventDefault()
         let token = sessionStorage.getItem('token')
@@ -61,7 +66,8 @@ function PostGenerator(props) {
                 console.log({ error })
             })
     }
-
+    //---------------------------------------------------------
+    //fonction de mise ajour de l'affichage en fonction des input utilisateur
     function updatePicturesDisplay(e) {
         e.preventDefault()
         var files = e.target.files

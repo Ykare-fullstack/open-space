@@ -25,9 +25,12 @@ function Research() {
             authorization: token,
         }),
     }
+    //--------------------------------------------------------------------
+    //fonction d'envoi de la recherche de post
     function submitPostResearch() {
         firstRenderPost.current = false
         setPostBuffer([])
+        //mise en forme de la chaîne de caractère à traiter par l'API
         let curatedParams = postSearch.split(' ').join('&')
         console.log('after 1st split')
         console.log(curatedParams)
@@ -41,9 +44,12 @@ function Research() {
                 }
             })
     }
+    //--------------------------------------------------------------------
+    //fonction d'envoi de la recherche d'utilisateur'
     function submitUserResearch() {
         firstRenderUser.current = false
         setUserBuffer([])
+        //mise en forme de la chaîne de caractère à traiter par l'API
         let curatedParams = userSearch.split(' ').join('&')
         const urlSearchUsers =
             'http://localhost:3001/api/user/gu2/' + curatedParams

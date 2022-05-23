@@ -3,6 +3,11 @@ import React, { useContext, useState, useEffect } from 'react'
 import { LoginContext } from '../../contexts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+//composant d'affichage de l'évaluation de la publication
+//3 états :
+//neutre
+//like
+//dislike
 function PostAppraisalFrame(props) {
     const { userData } = useContext(LoginContext)
     const [appraisal, setAppraisal] = useState(-1)
@@ -17,6 +22,7 @@ function PostAppraisalFrame(props) {
             authorization: token,
         }),
     }
+    //fetch de l'évaluation initiale de la publication
     useEffect(() => {
         fetch(urlget, getAppraisal)
             .then((response) => response.json())

@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import '../../styles/Mollecules/NavFrame.css'
 import NavTitle from '../Atoms/NavTitle'
 import { CategoryContext } from '../../contexts/index'
-
+//selection de l'affichage par catégorie
 function CategoriesNav() {
     const { setCategory } = useContext(CategoryContext)
     function updateCategory(e) {

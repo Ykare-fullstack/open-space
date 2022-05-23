@@ -23,6 +23,7 @@ exports.signup = (req, res, next)=> {
     res.status(400).send("la création d'un utilisateur nécessite des informations valides",{created:false})
   }
   else{
+    //si paramètres de requête valides :
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
       db.query("INSERT INTO users (password, email, firstname, lastname, profilepicture) VALUES (?,?,?,?,?)", [hash, userEmail, userFirstname, userLastname, blankPicture ], (err) => {
@@ -124,6 +125,7 @@ exports.login = (req, res, next) => {
 }
 
 //-----------------------------------------------------------------------------------
+//récupération des informations utilisateur via ID spécifique
 exports.getUserInfo = (req, res, next) => {
   const userId =  req.params.userId
 
@@ -164,6 +166,7 @@ exports.getUserInfo = (req, res, next) => {
   })
 }
 //-----------------------------------------------------------------------------------
+//récupération des informations de l'utilisateur actuel (page de compte utilisateur)
 exports.getViewerInfo = (req, res, next) => {
   const userId =  req.auth.userId
   
@@ -205,6 +208,7 @@ exports.getViewerInfo = (req, res, next) => {
 }
 
 //-----------------------------------------------------------------------------------
+//fonction de mise à jour du mot de passe utilisateur
 exports.updateUserPass = (req, res, next) => {
   const userId =  req.auth.userId
   const pass = req.body.pass
@@ -212,6 +216,7 @@ exports.updateUserPass = (req, res, next) => {
   {
     res.status('401').send('mot de passe non valide')
   }
+  //si les paramètres de requête sont valides :
   else
   {
     bcrypt.hash(pass, 10)
@@ -229,9 +234,11 @@ exports.updateUserPass = (req, res, next) => {
 }
 
 //-----------------------------------------------------------------------------------
+//fonction de vérification du mot de passe
 exports.checkUserPass = (req, res, next) => {
   const userId =req.body.userId
   const userPassword = req.body.pass
+  //chaque réponse est timedout afin de ralentir les attaques de force brute
   db.query("SELECT * FROM users WHERE idusers= ?", userId, (err, result) =>{
     if(err)
     {
@@ -271,6 +278,8 @@ exports.checkUserPass = (req, res, next) => {
 }
 
 //-----------------------------------------------------------------------------------
+//fonction de suppression d'utilisateur
+//chaque champ de la base de donnée contenant d'ID de l'utilisateur sera supprimé
 exports.deleteUser = (req, res, next) => {
   const userId =  req.body.userId
   
@@ -299,37 +308,38 @@ exports.deleteUser = (req, res, next) => {
                       res.status(400).send("erreur de querry : DELETE user checkedin status");
                     }
                     else{
-                      db.query("SELECT url FROM pictures WHERE iduser=?", userId, (err, result)=>{
+                      db.query("DELETE FROM role WHERE iduser=?", userId, (err)=>{
                         if (err) {
                           res.status(400).send("erreur de querry : SELECT user pictures");
                         }
                         else{
-                          if(result.length === 0){
-                            res.status(200).send("utilisateur supprimé")
-                          }
-                          else{
-                            result.forEach(picture => {
-                              fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
-                                if (err) console.log(err);
-                              }));
-                            });
-                            db.query("DELETE FROM pictures WHERE iduser=?", userId, (err)=>{
-                              if (err) {
-                                res.status(400).send("erreur de querry : SELECT user pictures");
+                          db.query("SELECT url FROM pictures WHERE iduser=?", userId, (err, result)=>{
+                            if (err) {
+                              res.status(400).send("erreur de querry : SELECT user pictures");
+                            }
+                            else{
+                              if(result.length === 0){
+                                res.status(200).send("utilisateur supprimé")
                               }
                               else{
-                                db.query("DELETE FROM role WHERE iduser=?", userId, (err)=>{
+                                result.forEach(picture => {
+                                  fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
+                                    if (err) console.log(err);
+                                  }));
+                                });
+                                db.query("DELETE FROM pictures WHERE iduser=?", userId, (err)=>{
                                   if (err) {
                                     res.status(400).send("erreur de querry : SELECT user pictures");
                                   }
-                                  else{
+                                  else
+                                  {
                                     console.log("photos utilisateurs supprimées")
                                     res.status(200).send("utilisateur supprimé")
                                   }
                                 })
                               }
-                            })
-                          }
+                            }
+                          })
                         }
                       })
                     }
@@ -345,6 +355,7 @@ exports.deleteUser = (req, res, next) => {
 }
 
 //-----------------------------------------------------------------------------------
+//fonction de mise à jour de la photo de profil utilisateur
 exports.updateUserPicture = (req, res, next) => {
   //suppression de l'ancienne photo de profil et ajout de la nouvelle
   const userId =  req.auth.userId
@@ -402,6 +413,7 @@ exports.updateUserPicture = (req, res, next) => {
 }
 
 //-----------------------------------------------------------------------------------
+//fonction de mise à jour de la bio utilisateur
 exports.updateUserDescription = (req, res, next) => {
   const userId =  req.auth.userId
   const description = req.body.description
@@ -423,6 +435,8 @@ exports.updateUserDescription = (req, res, next) => {
   }
 }
 
+//-----------------------------------------------------------------------------------
+//fonction de recherche d'un utilisateur via paramètres
 exports.researchUser = (req, res, next )=> {
   if(!req.params.usersearch||req.params.usersearch>300)
   {

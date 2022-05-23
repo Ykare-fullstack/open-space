@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNavigate } from 'react-router-dom'
 import { LoginContext } from '../../contexts/index'
 
-//redirection vers la section/page désirée
+//Barre de navigation:redirection vers la section/page désirée et Logout
 function GeneralNav() {
     const { setLoginStatus } = useContext(LoginContext)
     const navigate = useNavigate()

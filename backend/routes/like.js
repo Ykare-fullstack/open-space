@@ -5,8 +5,8 @@ const authalpha = require ('../middleware/authalpha')
 
 //routes d'évaluation de publication:
 //obtention de l'évaluation d'une publication spécifique
-//envoi d'une évaluation
 router.get('/:postId',authalpha, likeCtrl.getAppraisal )
+//envoi d'une évaluation
 router.post('/', authalpha, likeCtrl.postAppraisal);
 
 module.exports = router;

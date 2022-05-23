@@ -2,6 +2,7 @@ import '../../styles/Mollecules/UserPreview.css'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+//composant vignette de pré-visualisation d'utilisateur
 function UserPreview(props) {
     console.log(props.user)
     return (

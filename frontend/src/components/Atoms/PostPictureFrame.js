@@ -1,6 +1,6 @@
 import '../../styles/Atoms/PostPictureFrame.css'
 import React from 'react'
-
+//composant structure image
 function PostPictureFrame(props) {
     return (
         <div className="post-picture-frame">

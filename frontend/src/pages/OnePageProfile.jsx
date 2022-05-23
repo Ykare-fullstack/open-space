@@ -31,7 +31,7 @@ function OnePageProfile() {
             authorization: token,
         }),
     }
-
+    //fetch des informations utilisateur après le premier rendu
     useEffect(() => {
         fetch(urlGetInfo, getUserAndPosts)
             .then((response) => response.json())
@@ -67,7 +67,8 @@ function OnePageProfile() {
         }
         fetch(url, switchR)
     }
-
+    //-------------------------------------------------------
+    //fonction de suppression du compte
     function deleteAccount(e) {
         e.preventDefault()
         let token = sessionStorage.getItem('token')

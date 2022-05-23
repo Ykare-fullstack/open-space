@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../styles/Atoms/LinkedTitle.css'
 import { Link } from 'react-router-dom'
-
+//composant logo Open-Space
 function LinkedTitle() {
     return (
         <div className="os-linkedTitle">

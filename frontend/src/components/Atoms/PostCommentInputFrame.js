@@ -3,12 +3,14 @@ import '../../styles/Atoms/PostCommentInputFrame.css'
 import { LoginContext } from '../../contexts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+//composant de saisie de nouveau commentaire
 function PostCommentInputFrame(props) {
     const [newComment, setNewComment] = useState('')
     const { userData } = useContext(LoginContext)
     const token = sessionStorage.getItem('token')
     const textearea = document.getElementById('comment-input')
     //----------------------------------------------
+    //fonction d'envoi du nouveau commentaire
     function sendNewComment(e) {
         e.preventDefault()
 
@@ -50,7 +52,7 @@ function PostCommentInputFrame(props) {
                 <button
                     type="submit"
                     id="comment-submit-disabled"
-                    aria-label="envoyer le commmentaire saisit"
+                    aria-label="envoyer le commmentaire saisi"
                     disabled
                 >
                     <FontAwesomeIcon icon="fa-solid fa-paper-plane" size="1x" />
@@ -60,7 +62,7 @@ function PostCommentInputFrame(props) {
                     type="submit"
                     onClick={sendNewComment}
                     id="comment-submit"
-                    aria-label="envoyer le commmentaire saisit"
+                    aria-label="envoyer le commmentaire saisi"
                 >
                     <FontAwesomeIcon icon="fa-solid fa-paper-plane" size="1x" />
                 </button>

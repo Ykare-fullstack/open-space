@@ -4,6 +4,7 @@ import { LoginContext } from '../../contexts'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+//composant commentaire avec section de modification de commentaire
 function CommentFrame(props) {
     const [modifying, setModifying] = useState(false)
     const [updatedComment, setUpdatedComment] = useState(props.content)

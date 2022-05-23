@@ -83,6 +83,9 @@ input[type='radio']:checked::before {
     font-size: 20px;
     margin-left: 10%;
 }
+#category-nav-frame {
+    width: 75%;
+}
 /*déplacement de la barre de navigation en haut de page*/
 @media screen and (max-width: 1024px) {
     .nav-frame {
@@ -111,5 +114,6 @@ input[type='radio']:checked::before {
     #category-nav-frame {
         flex-direction: column;
         margin-top: 30px;
+        width: 100%;
     }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../styles/Atoms/NavTitle.css'
-
+//composant de navigation h3
 function NavTitle({ text }) {
     return (
         <div className="nav-title-wrapper">

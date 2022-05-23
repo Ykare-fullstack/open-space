@@ -2,6 +2,8 @@ import '../../styles/Atoms/PostCommentsFrame.css'
 import React, { useEffect, useState } from 'react'
 import CommentFrame from '../Atoms/CommentFrame'
 import PostCommentInputFrame from '../Atoms/PostCommentInputFrame'
+
+//composant d'affichage et saisie de commentaires
 function PostCommentsFrame(props) {
     const [comments, setComments] = useState([])
     const [hasUpdated, setHasUpdated] = useState(false)
@@ -15,7 +17,7 @@ function PostCommentsFrame(props) {
             authorization: token,
         }),
     }
-
+    //fetch des commentaires relatifs à la publication
     useEffect(() => {
         fetch(url, getComments)
             .then((response) => response.json())
