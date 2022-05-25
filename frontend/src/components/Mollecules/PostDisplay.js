@@ -42,8 +42,6 @@ function PostDisplay() {
                     setKeepGoing(false)
                     isLoading.current = false
                 } else {
-                    console.log(postObject)
-
                     setPostBuffer((postBuffer) => [...postBuffer, postObject])
                     setLastPostId(postObject.idPost)
 
@@ -72,7 +70,7 @@ function PostDisplay() {
             check_if_needs_more_content()
         }, 100)
     })
-    //cas de modification de catgorie : reset du scroll infini
+    //cas de modification de categorie : reset du scroll infini
     //l'API gère les post envoyés en fonction de la catégorie
     useEffect(() => {
         setPostBuffer([])

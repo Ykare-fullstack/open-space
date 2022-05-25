@@ -98,7 +98,10 @@ function CommentFrame(props) {
                             className="update-comment-content-input"
                             id="update-comment-text-input"
                         />
-                        <label for="update-comment-text-input" hidden></label>
+                        <label
+                            htmlFor="update-comment-text-input"
+                            hidden
+                        ></label>
                         <div className="update-comment-button-wrapper">
                             <button
                                 type="submit"

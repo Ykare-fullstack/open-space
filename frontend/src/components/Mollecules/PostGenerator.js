@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //description oligatoire
 //catégorie initiale : diverse
 function PostGenerator(props) {
-    console.log(props.hasUpdated)
     const [post, setPost] = useState({
         description: '',
         pictures: [],

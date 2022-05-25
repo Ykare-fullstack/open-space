@@ -138,11 +138,7 @@ function PostRepair() {
             }
         }
     }
-    console.log('post :')
-    console.log(post)
-    console.log('uploaded:')
-    console.log(uploadedPictures)
-    console.log(isLoading.current)
+
     return (
         <div className="post-repair-main-wrapper">
             <div className="post-repair-nav">

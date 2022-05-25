@@ -66,6 +66,7 @@ function Research() {
             <div className="research-nav">
                 <GeneralNav />
             </div>
+
             <div className="research-frame-wrapper">
                 <div className="research-frame">
                     <h2>Que cherchez vous ?</h2>

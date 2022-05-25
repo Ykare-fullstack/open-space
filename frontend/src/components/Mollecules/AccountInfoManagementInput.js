@@ -57,6 +57,7 @@ function AccountInfoManagementInput(props) {
             userId: userData.userId,
             description: userData.description,
         }
+        console.log(userData.description)
         let updateUser = {
             method: 'PUT',
             body: JSON.stringify(authPayload),
@@ -165,7 +166,6 @@ function AccountInfoManagementInput(props) {
                             ...userData,
                             description: e.target.value,
                         })
-                        console.log(userData.description)
                     }}
                     id="description-input"
                     aria-label="zone de saisie de votre nouvelle bio"

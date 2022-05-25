@@ -10,135 +10,158 @@ var db = require('../utils/MySqlConnector')
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
+function isTextValid(value) {
+    return /^[a-zA-Z0-9àäâéèêëïîöôûüç'"?!()&=@ .-]+$/.test(value)
+  }
 
 exports.createPublication = (req, res, next) =>{
     const description = req.body.description
     const category = req.body.category
     const userId =  req.auth.userId
     let multiValues = []
-if(!description||description===''||description.length>500)
-{
-    res.status(400).send('une description est nécessaire pour chaque post')
-}
-else{
-    db.query("INSERT INTO posts (description, category, iduser, creationdate) VALUES (?, ?, ?, NOW())", [ description, category, userId ], (err,result) => {
-        if(err){
-            console.log("erreur 1")
-        }
-        else{
-            if (req.files.length === 0) {
-                res.status(400).json({sent:true})     
+
+
+    if(!isTextValid(description)||description.length>500||!category||category===''||category.length>20)
+    {
+        res.status(400).send('mauvais format de description ou de catégorie de la publication')
+    }
+    else{
+        db.query("INSERT INTO posts (description, category, iduser, creationdate) VALUES (?, ?, ?, NOW())", [ description, category, userId ], (err,result) => {
+            if(err){
+                console.log("erreur 1")
             }
             else{
-                for (const single_file of req.files) {      
-                    pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
-                    pictureData = [pictureAdress, userId, 0, result.insertId]
-                    multiValues.push(pictureData)
+                if (req.files.length === 0) {
+                    res.status(400).json({sent:true})     
                 }
-                db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (error) => {
-                    if(error){
-                        console.log({error: error})
+                else{
+                    for (const single_file of req.files) {      
+                        pictureAdress = `${req.protocol}://${req.get('host')}/images/${single_file.filename}`
+                        pictureData = [pictureAdress, userId, 0, result.insertId]
+                        multiValues.push(pictureData)
                     }
-                    else{
-                        res.status(400).json({sent:true})
-                    }
-                })    
-            }
-            
-        }  
-    }) 
-}
+                    db.query("INSERT INTO pictures (url, iduser, isprofile, idpost) VALUES ?", [multiValues], (error) => {
+                        if(error){
+                            console.log({error: error})
+                        }
+                        else{
+                            res.status(400).json({sent:true})
+                        }
+                    })    
+                }
+                
+            }  
+        }) 
+    }
       
 }
 
 exports.deletePublication = (req, res, next) =>{
     const postId = req.body.postId
-
-    db.query("DELETE FROM posts WHERE idpost=?", postId, (err)=>{
-        if(err){
-            res.status(400).send(err)
-        }
-        else{
-            db.query("DELETE FROM comments WHERE postid=?", postId, (err)=>{
-                if(err){
-                    res.status(400).send(err)
-                }
-                else{
-                    db.query("DELETE FROM postappraisal WHERE idpost=?", postId, (err)=>{
-                        if(err){
-                            res.status(400).send(err)
-                        }
-                        else{
-                            db.query("SELECT url FROM pictures WHERE idpost=?", postId, (err,result)=>{
-                                if(err){
-                                    res.status(400).send(err)
-                                }
-                                else{
-                                    if(result.length == 0){
-                                        res.status(200).send('publication supprimée')
+    if(isNaN(postId)||!postId||postId===0||postId.length>6)
+    {
+        res.status(400).send('id de publication invalide')
+    } 
+    else{
+        db.query("DELETE FROM posts WHERE idpost=?", postId, (err)=>{
+            if(err){
+                res.status(400).send(err)
+            }
+            else{
+                db.query("DELETE FROM comments WHERE postid=?", postId, (err)=>{
+                    if(err){
+                        res.status(400).send(err)
+                    }
+                    else{
+                        db.query("DELETE FROM postappraisal WHERE idpost=?", postId, (err)=>{
+                            if(err){
+                                res.status(400).send(err)
+                            }
+                            else{
+                                db.query("SELECT url FROM pictures WHERE idpost=?", postId, (err,result)=>{
+                                    if(err){
+                                        res.status(400).send(err)
                                     }
                                     else{
-
-                                        result.forEach(picture => {
-                                            fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
-                                            if (err) console.log(err);
-                                            }));
-                                        });
-                                        db.query("DELETE FROM pictures WHERE idpost=?", postId, (err)=>{
-                                            if (err) {
-                                                res.status(400).send("erreur de querry : DELETE post pictures");
-                                            }
-                                            else{
-                                                console.log("photos post supprimées")
-                                                res.status(200).send("post supprimé")
-                                            }
-                                        })
+                                        if(result.length == 0){
+                                            res.status(200).send('publication supprimée')
+                                        }
+                                        else{
+    
+                                            result.forEach(picture => {
+                                                fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
+                                                if (err) console.log(err);
+                                                }));
+                                            });
+                                            db.query("DELETE FROM pictures WHERE idpost=?", postId, (err)=>{
+                                                if (err) {
+                                                    res.status(400).send("erreur de querry : DELETE post pictures");
+                                                }
+                                                else{
+                                                    console.log("photos post supprimées")
+                                                    res.status(200).send("post supprimé")
+                                                }
+                                            })
+                                        }
                                     }
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-        }
-    })
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+    
 }
 
 exports.getAllPublicationFromUser= (req, res, next)=>{
     const userId = req.params.userId
-    db.query('SELECT * FROM posts WHERE iduser=?', userId, (err, resultpost) =>{
-        if(err){
-            res.status(400).json({error})}
-        else{
-            if(resultpost.length===0){
-                res.status(200)
-            }
+    if(isNaN(userId)||!userId||userId===0||userId.length>6)
+    {
+        res.status(400).send('id utilisateur invalide')
+    }
+    else
+    {
+        db.query('SELECT * FROM posts WHERE iduser=?', userId, (err, resultpost) =>{
+            if(err){
+                res.status(400).json({error})}
             else{
-                let eta = resultpost.length
-                for (let index = 0; index < resultpost.length; index++) {
-                    db.query('SELECT * FROM pictures WHERE iduser=? AND idpost=? LIMIT 1',[userId,resultpost[index].idpost], (error, resultpicture)=>{
-                        if(error){res.status(400).json({error})}
-                        else{
-                            if(resultpicture){
-                                resultpost[index].picture=resultpicture
+                if(resultpost.length===0){
+                    res.status(200)
+                }
+                else{
+                    let eta = resultpost.length
+                    for (let index = 0; index < resultpost.length; index++) {
+                        db.query('SELECT * FROM pictures WHERE iduser=? AND idpost=? LIMIT 1',[userId,resultpost[index].idpost], (error, resultpicture)=>{
+                            if(error){res.status(400).json({error})}
+                            else{
+                                if(resultpicture){
+                                    resultpost[index].picture=resultpicture
+                                }
+                                eta--
+                                if(eta==0)
+                                {       
+                                    res.status(200).json(resultpost)
+                                }
                             }
-                            eta--
-                            if(eta==0)
-                            {       
-                                res.status(200).json(resultpost)
-                            }
-                        }
-                    })
+                        })
+                    }
                 }
             }
-        }
-    })
+        })
+    }
 }
 
 exports.getPublication = (req, res, next)=>{
 
     const postId = req.params.postid
-        
+    if(isNaN(postId)||!postId||postId===0||postId.length>10)
+    {
+        res.status(400).send('id publication invalide')
+    } 
+    else
+    {
         db.query('SELECT * FROM posts WHERE idpost=?', postId, (error, resultpost) =>{
             if(error){
                 res.status(400).json({error})}
@@ -167,6 +190,8 @@ exports.getPublication = (req, res, next)=>{
                 }
             }
         })
+    }   
+       
 }
           
 exports.getNextPublication = (req, res, next) =>{
@@ -174,8 +199,8 @@ exports.getNextPublication = (req, res, next) =>{
     //test de validité de la catégorie passé en paramètre
     const lastPostId = req.params.lastpostid
     const category = req.params.category
-    if(category!= 'init' && category!= 'holidays' && category!= 'news' && category!= 'ideas' &&category!= 'diverse' &&category!= 'CE'){
-            res.status(400).send('catégorie non existante')
+    if(category!= 'init' && category!= 'holidays' && category!= 'news' && category!= 'ideas' &&category!= 'diverse' &&category!= 'CE' ||isNaN(lastPostId)||!lastPostId||lastPostId===0||lastPostId.length>10){
+            res.status(400).send('catégorie ou publication invalide')
     }
     else{
 
@@ -311,10 +336,10 @@ exports.updatePublication = (req, res, next) =>{
     const postId = req.body.postId
     const description = req.body.description
     const picturesInfo = JSON.parse(req.body.remainingpictures)
-    console.log(picturesInfo)
-    if(!description||description===''||description.length>500||!userId||userId==='')
+
+    if(!isTextValid(description)||description.length>500||isNaN(userId)||!userId||userId===0||userId.length>10||isNaN(postId)||!postId||postId===0||postId.length>10)
     {
-        res.status(400).send('une description est nécessaire pour chaque post')
+        res.status(400).send('paramètres invalides')
     }
     else
     {

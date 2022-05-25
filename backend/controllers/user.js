@@ -10,6 +10,21 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
 
+//-----------------------------------------
+//fonction d etest regex pour entrées utilisateur :
+function isEmailValid(value) {
+  return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+      value
+  )
+}
+function isPasswordValid(value) {
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)
+}
+function isTextValid(value) {
+  return /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/.test(
+      value
+  )
+}
 //-----------------------------------------------------------------------------------
 //module de création de compte (et initialisation du role)
 exports.signup = (req, res, next)=> {
@@ -18,7 +33,7 @@ exports.signup = (req, res, next)=> {
   const userFirstname = req.body.firstname
   const userLastname = req.body.lastname
   const blankPicture= `${req.protocol}://${req.get('host')}/images/blank-profile-picture.png`
-  if(!userEmail || userEmail ===''||!userFirstname || userFirstname ===''|| !userLastname || userLastname ===''||!req.body.password || req.body.password ===''|| req.body.password.length>40 || userEmail.length>40 || userFirstname.length>40|| userLastname.length>40)
+  if(!isEmailValid(userEmail) || !isTextValid(userFirstname) || !isTextValid(userLastname) ||!isPasswordValid(req.body.password)|| req.body.password.length>40 || userEmail.length>40 || userFirstname.length>40|| userLastname.length>40)
   {
     res.status(400).send("la création d'un utilisateur nécessite des informations valides",{created:false})
   }
@@ -64,64 +79,69 @@ exports.login = (req, res, next) => {
   const userEmail =req.body.email
   const userPassword = req.body.password
 
-
-  db.query("SELECT * FROM users WHERE email= ?", userEmail, (err, result) =>{
-
-    if(err)
-    {
-      console.log('ERREUR DE QUERRY')
-      res.status(401).send({ access: false });
-    }
-    else
-    { 
-      if(!result[0])
+  if(!isEmailValid(userEmail)||!isPasswordValid(userPassword)||userEmail.length>40||userPassword.length>40)
+  {
+    res.status(400).send('paramètres invalides')
+  }
+  else
+  {
+    db.query("SELECT * FROM users WHERE email= ?", userEmail, (err, result) =>{
+      if(err)
       {
-        setTimeout((() => {
-          return  res.status(403).send({ access: false })
-        }), 2700)  
+        console.log('ERREUR DE QUERRY')
+        res.status(401).send({ access: false });
       }
       else
       { 
-        console.log('RESULTAT OBTENU DANS LA BDD') 
-        bcrypt.compare(userPassword, result[0].password)
-          .then(valid => {
-            if (!valid) { 
-              setTimeout((() => {
-                return   res.status(403).send({ access: false });
-              }), 2700)
-             
-            }
-            else{
-              const iduser = result[0].idusers.toString()
-
-              db.query("SELECT * FROM role WHERE iduser=?", iduser, (err, resultrole) =>{
-                if(err)
-                {
-                  console.log('ERREUR DE QUERRY')
-                  res.status(401).send({ access: false });
-                }
-                else{
-                  setTimeout((() => {
-                    return   res.status(200).send({
-                      access: true,
-                      userId: iduser,
-                      role: resultrole[0].role,
-                      firstname: result[0].firstname,
-                      lastname: result[0].lastname,
-                      description: result[0].description,
-                      profilepicture: result[0].profilepicture,
-                      token: jwt.sign({ userId: result[0].idusers,
-                      role: resultrole[0].role },'FranK_HerberT_1965_Dune',{ expiresIn: '24h' })
-                    });
-                  }), 2700)
-                  
-                }
-              })  
-            }
-          })
+        if(!result[0])
+        {
+          setTimeout((() => {
+            return  res.status(403).send({ access: false })
+          }), 2700)  
+        }
+        else
+        { 
+          console.log('RESULTAT OBTENU DANS LA BDD') 
+          bcrypt.compare(userPassword, result[0].password)
+            .then(valid => {
+              if (!valid) { 
+                setTimeout((() => {
+                  return   res.status(403).send({ access: false });
+                }), 2700)
+               
+              }
+              else{
+                const iduser = result[0].idusers.toString()
+  
+                db.query("SELECT * FROM role WHERE iduser=?", iduser, (err, resultrole) =>{
+                  if(err)
+                  {
+                    console.log('ERREUR DE QUERRY')
+                    res.status(401).send({ access: false });
+                  }
+                  else{
+                    setTimeout((() => {
+                      return   res.status(200).send({
+                        access: true,
+                        userId: iduser,
+                        role: resultrole[0].role,
+                        firstname: result[0].firstname,
+                        lastname: result[0].lastname,
+                        description: result[0].description,
+                        profilepicture: result[0].profilepicture,
+                        token: jwt.sign({ userId: result[0].idusers,
+                        role: resultrole[0].role },'FranK_HerberT_1965_Dune',{ expiresIn: '24h' })
+                      });
+                    }), 2700)
+                    
+                  }
+                })  
+              }
+            })
+        }
       }
-    }
-  })
+    })
+  }
 }
 
 //-----------------------------------------------------------------------------------
@@ -129,82 +149,96 @@ exports.login = (req, res, next) => {
 exports.getUserInfo = (req, res, next) => {
   const userId =  req.params.userId
 
-  db.query("SELECT * FROM users WHERE idusers = ?", userId, (err, result) =>{
+  if(isNaN(userId)||!userId||userId===0||userId.length>6)
+  {
+    res.status(400).send('paramètre invalide');
+  }
+  else
+  {
+    db.query("SELECT * FROM users WHERE idusers = ?", userId, (err, result) =>{
   
-    if(err)
-    {
-      console.log(err.message)
-      res.status(401).send({ message: 'erreur de querry' });
-    }
-    else 
-    {
-      if(!result)
+      if(err)
       {
-        console.log('AUCUN RESULTAT CORRESPONDANT POUR CET ID')
-        res.status(401).send({ message: 'AUCUN RESULTAT CORRESPONDANT POUR CET ID' });
+        console.log(err.message)
+        res.status(401).send({ message: 'erreur de querry' });
       }
-      else
-      { 
-        db.query("SELECT * FROM role WHERE iduser=?", userId, (err, resultrole) =>{
-          if(err)
-          {
-            console.log('ERREUR DE QUERRY')
-            res.status(401).send({ message: 'erreur de querry' });
-          }
-          else{
-              res.status(200).send({
-                userId: userId,
-                role : resultrole[0].role,
-                firstname: result[0].firstname,
-                lastname: result[0].lastname,
-                description: result[0].description,
-                profilepicture: result[0].profilepicture})
-          }
-        })
+      else 
+      {
+        if(!result)
+        {
+          console.log('AUCUN RESULTAT CORRESPONDANT POUR CET ID')
+          res.status(401).send({ message: 'AUCUN RESULTAT CORRESPONDANT POUR CET ID' });
+        }
+        else
+        { 
+          db.query("SELECT * FROM role WHERE iduser=?", userId, (err, resultrole) =>{
+            if(err)
+            {
+              console.log('ERREUR DE QUERRY')
+              res.status(401).send({ message: 'erreur de querry' });
+            }
+            else{
+                res.status(200).send({
+                  userId: userId,
+                  role : resultrole[0].role,
+                  firstname: result[0].firstname,
+                  lastname: result[0].lastname,
+                  description: result[0].description,
+                  profilepicture: result[0].profilepicture})
+            }
+          })
+        }
       }
-    }
-  })
+    })
+  }
+  
 }
 //-----------------------------------------------------------------------------------
 //récupération des informations de l'utilisateur actuel (page de compte utilisateur)
 exports.getViewerInfo = (req, res, next) => {
   const userId =  req.auth.userId
+  if(isNaN(userId)||!userId||userId===0||userId.length>6)
+  {
+    res.status(400).send('utilisateur invalide');
+  }
+  else
+  {
+    db.query("SELECT * FROM users WHERE idusers = ?", userId, (err, result) =>{
   
-  db.query("SELECT * FROM users WHERE idusers = ?", userId, (err, result) =>{
-  
-    if(err)
-    {
-      console.log(err.message)
-      res.status(401).send({ message: 'erreur de querry' });
-    }
-    else 
-    {
-      if(!result)
+      if(err)
       {
-        console.log('AUCUN RESULTAT CORRESPONDANT POUR CET ID')
-        res.status(401).send({ message: 'AUCUN RESULTAT CORRESPONDANT POUR CET ID' });
+        console.log(err.message)
+        res.status(401).send({ message: 'erreur de querry' });
       }
-      else
-      { 
-        db.query("SELECT * FROM role WHERE iduser=?", userId, (err, resultrole) =>{
-          if(err)
-          {
-            console.log('ERREUR DE QUERRY')
-            res.status(401).send({ message: 'erreur de querry' });
-          }
-          else{
-            res.status(200).send({
-              userId: userId,
-              role: resultrole[0].role,
-              lastname: result[0].lastname,
-              firstname: result[0].firstname,
-              description: result[0].description,
-              profilepicture: result[0].profilepicture})
+      else 
+      {
+        if(!result)
+        {
+          console.log('AUCUN RESULTAT CORRESPONDANT POUR CET ID')
+          res.status(401).send({ message: 'AUCUN RESULTAT CORRESPONDANT POUR CET ID' });
         }
-      })
+        else
+        { 
+          db.query("SELECT * FROM role WHERE iduser=?", userId, (err, resultrole) =>{
+            if(err)
+            {
+              console.log('ERREUR DE QUERRY')
+              res.status(401).send({ message: 'erreur de querry' });
+            }
+            else{
+              res.status(200).send({
+                userId: userId,
+                role: resultrole[0].role,
+                lastname: result[0].lastname,
+                firstname: result[0].firstname,
+                description: result[0].description,
+                profilepicture: result[0].profilepicture})
+          }
+        })
+        }
       }
-    }
-  })
+    })
+  } 
 }
 
 //-----------------------------------------------------------------------------------
@@ -212,9 +246,9 @@ exports.getViewerInfo = (req, res, next) => {
 exports.updateUserPass = (req, res, next) => {
   const userId =  req.auth.userId
   const pass = req.body.pass
-  if(!pass||pass===''||pass.length>40)
+  if(!isPasswordValid(pass)||pass.length>40||isNaN(userId)||!userId||userId===0||userId.length>6)
   {
-    res.status('401').send('mot de passe non valide')
+    res.status('401').send('paramètres invalides')
   }
   //si les paramètres de requête sont valides :
   else
@@ -238,43 +272,49 @@ exports.updateUserPass = (req, res, next) => {
 exports.checkUserPass = (req, res, next) => {
   const userId =req.body.userId
   const userPassword = req.body.pass
-  //chaque réponse est timedout afin de ralentir les attaques de force brute
-  db.query("SELECT * FROM users WHERE idusers= ?", userId, (err, result) =>{
-    if(err)
-    {
-      console.log('ERREUR DE QUERRY')
-      setTimeout((() => {
-        return   res.status(401).json({ message: 'erreur de querry',check:false});
-      }), 2700)
-      
-    }
-    else
-    { 
-      if(!result[0])
-      { 
+  if(!isPasswordValid(userPassword)||userPassword.length>40||isNaN(userId)||!userId||userId===0||userId.length>6)
+  {
+    res.status('401').send('paramètres invalides')
+  }
+  else
+  {
+    //chaque réponse est timedout afin de ralentir les attaques de force brute
+    db.query("SELECT * FROM users WHERE idusers= ?", userId, (err, result) =>{
+      if(err)
+      {
+        console.log('ERREUR DE QUERRY')
         setTimeout((() => {
-          return   res.status(200).json({message: "pas d'utilisateur à cet Id",check:false});
+          return   res.status(401).json({ message: 'erreur de querry',check:false});
         }), 2700)
-        
       }
       else
-      {
-        bcrypt.compare(userPassword, result[0].password)
-          .then(valid => {
-            if (!valid) {
-              setTimeout((() => {
-                return   res.status(200).json({ message: 'mot de passe invalide',check:false});
-              }), 2700)
-            }
-            else{
-              setTimeout((() => {
-                return   res.status(200).json({check:true});
-              }), 2700)
-            }
-          })
+      { 
+        if(!result[0])
+        { 
+          setTimeout((() => {
+            return   res.status(200).json({message: "pas d'utilisateur à cet Id",check:false});
+          }), 2700)
+          
+        }
+        else
+        {
+          bcrypt.compare(userPassword, result[0].password)
+            .then(valid => {
+              if (!valid) {
+                setTimeout((() => {
+                  return   res.status(200).json({ message: 'mot de passe invalide',check:false});
+                }), 2700)
+              }
+              else{
+                setTimeout((() => {
+                  return   res.status(200).json({check:true});
+                }), 2700)
+              }
+            })
+        }
       }
-    }
-  })
+    })
+  }
 }
 
 //-----------------------------------------------------------------------------------
@@ -283,75 +323,83 @@ exports.checkUserPass = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
   const userId =  req.body.userId
   
-  db.query("DELETE FROM users WHERE idusers=?", userId, (err)=>{
-    if (err) {
-      res.status(400).send("erreur de querry");
-    }
-    else{
-      db.query("DELETE FROM posts WHERE iduser=?", userId, (err)=>{
-        if (err) {
-          res.status(400).send("erreur de querry : DELETE user post");
-        }
-        else{
-          db.query("DELETE FROM postappraisal WHERE iduser=?", userId, (err)=>{
-            if (err) {
-              res.status(400).send("erreur de querry : DELETE user appraisal");
-            }
-            else{
-              db.query('DELETE FROM comments WHERE iduser=?', userId, (err)=>{
-                if (err) {
-                  res.status(400).send("erreur de querry : DELETE user comments");
-                }
-                else{
-                  db.query('DELETE FROM checkedin WHERE iduser=?', userId, (err)=>{
-                    if (err) {
-                      res.status(400).send("erreur de querry : DELETE user checkedin status");
-                    }
-                    else{
-                      db.query("DELETE FROM role WHERE iduser=?", userId, (err)=>{
-                        if (err) {
-                          res.status(400).send("erreur de querry : SELECT user pictures");
-                        }
-                        else{
-                          db.query("SELECT url FROM pictures WHERE iduser=?", userId, (err, result)=>{
-                            if (err) {
-                              res.status(400).send("erreur de querry : SELECT user pictures");
-                            }
-                            else{
-                              if(result.length === 0){
-                                res.status(200).send("utilisateur supprimé")
+  if(isNaN(userId)||!userId||userId===0||userId.length>6)
+  {
+    res.status(400).send("erreur de paramètre")
+  }
+  else
+  {
+    db.query("DELETE FROM users WHERE idusers=?", userId, (err)=>{
+      if (err) {
+        res.status(400).send("erreur de querry");
+      }
+      else{
+        db.query("DELETE FROM posts WHERE iduser=?", userId, (err)=>{
+          if (err) {
+            res.status(400).send("erreur de querry : DELETE user post");
+          }
+          else{
+            db.query("DELETE FROM postappraisal WHERE iduser=?", userId, (err)=>{
+              if (err) {
+                res.status(400).send("erreur de querry : DELETE user appraisal");
+              }
+              else{
+                db.query('DELETE FROM comments WHERE iduser=?', userId, (err)=>{
+                  if (err) {
+                    res.status(400).send("erreur de querry : DELETE user comments");
+                  }
+                  else{
+                    db.query('DELETE FROM checkedin WHERE iduser=?', userId, (err)=>{
+                      if (err) {
+                        res.status(400).send("erreur de querry : DELETE user checkedin status");
+                      }
+                      else{
+                        db.query("DELETE FROM role WHERE iduser=?", userId, (err)=>{
+                          if (err) {
+                            res.status(400).send("erreur de querry : SELECT user pictures");
+                          }
+                          else{
+                            db.query("SELECT url FROM pictures WHERE iduser=?", userId, (err, result)=>{
+                              if (err) {
+                                res.status(400).send("erreur de querry : SELECT user pictures");
                               }
                               else{
-                                result.forEach(picture => {
-                                  fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
-                                    if (err) console.log(err);
-                                  }));
-                                });
-                                db.query("DELETE FROM pictures WHERE iduser=?", userId, (err)=>{
-                                  if (err) {
-                                    res.status(400).send("erreur de querry : SELECT user pictures");
-                                  }
-                                  else
-                                  {
-                                    console.log("photos utilisateurs supprimées")
-                                    res.status(200).send("utilisateur supprimé")
-                                  }
-                                })
+                                if(result.length === 0){
+                                  res.status(200).send("utilisateur supprimé")
+                                }
+                                else{
+                                  result.forEach(picture => {
+                                    fs.unlink(`images/${picture.url.split('/images/')[1]}`, (err => {
+                                      if (err) console.log(err);
+                                    }));
+                                  });
+                                  db.query("DELETE FROM pictures WHERE iduser=?", userId, (err)=>{
+                                    if (err) {
+                                      res.status(400).send("erreur de querry : SELECT user pictures");
+                                    }
+                                    else
+                                    {
+                                      console.log("photos utilisateurs supprimées")
+                                      res.status(200).send("utilisateur supprimé")
+                                    }
+                                  })
+                                }
                               }
-                            }
-                          })
-                        }
-                      })
-                    }
-                  }) 
-                }
-              })
-            }
-          })
-        }
-      })
-    }
-  })
+                            })
+                          }
+                        })
+                      }
+                    }) 
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+    })
+  }
+  
 }
 
 //-----------------------------------------------------------------------------------
@@ -360,10 +408,9 @@ exports.updateUserPicture = (req, res, next) => {
   //suppression de l'ancienne photo de profil et ajout de la nouvelle
   const userId =  req.auth.userId
   const adressPicture = `${req.protocol}://${req.get('host')}/images/${req.files[0].filename}`
-  console.log(userId)
-  console.log(adressPicture)
-  if(!req.files[0]){
-    res.status(401).send('erreur : photo non envoyé vers api')
+
+  if(!req.files[0]||isNaN(userId)||!userId||userId===0||userId.length>6){
+    res.status(401).send('paramètres invalides')
   }
   else{
     db.query("DELETE FROM pictures WHERE iduser=? AND isprofile=1", userId, (err)=>{
@@ -418,17 +465,17 @@ exports.updateUserDescription = (req, res, next) => {
   const userId =  req.auth.userId
   const description = req.body.description
 
-
-  if(!description||description===''||description.length>40){
-    res.status('401').send('erreur : description non envoyé vers api')
+  console.log(description)
+  if(!description||description===''||description.length>500||isNaN(userId)||!userId||userId===0||userId.length>6){
+    res.status(401).send('erreur : description non envoyé vers api')
   }
   else{
     db.query('UPDATE users SET description=? WHERE idusers=?', [description, userId], (err) =>{
       if (err) {
-        res.status('401').send(err.message);
+        res.status(401).send(err.message);
       }
       else{
-        res.status('200').send("description de l'utilisateur mise à jour")
+        res.status(200).send("description de l'utilisateur mise à jour")
       }
     })
     
@@ -438,9 +485,9 @@ exports.updateUserDescription = (req, res, next) => {
 //-----------------------------------------------------------------------------------
 //fonction de recherche d'un utilisateur via paramètres
 exports.researchUser = (req, res, next )=> {
-  if(!req.params.usersearch||req.params.usersearch>300)
+  if(!req.params.usersearch||req.params.usersearch.length>300)
   {
-    res.status(200)
+    res.status(400).send('paramètres invalides')
   }
   else
   {

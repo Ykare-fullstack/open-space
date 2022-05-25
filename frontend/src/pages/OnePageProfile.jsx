@@ -9,7 +9,7 @@ import InfoDisplayDataContainer from '../components/Atoms/InfoDisplayDataContain
 import GeneralNav from '../components/Mollecules/NavFrameGeneral'
 function OnePageProfile() {
     const navigate = useNavigate()
-    const { userData, setLoginStatus } = useContext(LoginContext)
+    const { userData } = useContext(LoginContext)
 
     const string = window.location.href
     const url = new URL(string)
@@ -84,8 +84,6 @@ function OnePageProfile() {
         }
         fetch(url, deleteUser)
             .then(() => {
-                sessionStorage.clear()
-                setLoginStatus(false)
                 navigate('/')
             })
             .catch((error) => {

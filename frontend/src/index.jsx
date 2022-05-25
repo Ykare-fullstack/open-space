@@ -45,6 +45,7 @@ library.add(
     faWrench
 )
 disableReactDevTools()
+
 //"Plug" allant s'injecter dans #root dans index.html
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(<Hub />)

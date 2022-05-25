@@ -8,13 +8,11 @@ const LogScreen = ({ children }) => {
     const token = sessionStorage.getItem('token')
     const navigate = useNavigate()
 
-    if (!token || token == null) {
-        console.log('not logged in')
-        useEffect(() => {
+    useEffect(() => {
+        if (!token || token == null) {
+            console.log('not logged in')
             navigate('/login')
-        })
-    } else {
-        useEffect(() => {
+        } else {
             let url = 'http://localhost:3001/api/checkedin/'
             let checkedinAndGetInfo = {
                 method: 'GET',
@@ -27,7 +25,7 @@ const LogScreen = ({ children }) => {
                 .then((authentification) => {
                     if (!authentification.authenticated) {
                         setLoginStatus(false)
-                        console.log('user not logged in')
+                        console.log('Utilisateur  non authentifié')
                         navigate('/Login')
                     } else {
                         setLoginStatus(true)
@@ -49,8 +47,9 @@ const LogScreen = ({ children }) => {
                 .catch((error) => {
                     console.log(error)
                 })
-        }, [])
-    }
+        }
+    }, [])
+
     return children
 }
 export default LogScreen

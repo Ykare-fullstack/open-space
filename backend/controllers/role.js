@@ -11,9 +11,9 @@ app.use(express.urlencoded({ extended : true }));
 exports.switchR= (req, res, next) =>{
     const newrole = req.body.func
     const promoted = req.body.promoted
-    if(newrole!=1&&newrole!=2&&newrole!=3)
+    if(newrole!=1&&newrole!=2&&newrole!=3||isNaN(promoted)||promoted.length>6||promoted===''||!promoted||newrole)
     {
-        res.status(400).send('role invalide')
+        res.status(400).send('role ou utilisateur invalide')
     }
     else
     {
