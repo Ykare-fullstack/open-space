@@ -63,3 +63,124 @@ Gestion des fichiers entrants
 Outils de développement  
 [nodemon](https://www.npmjs.com/package/nodemon)  
 [prettier](https://prettier.io/)
+
+Compétences évaluées
+
+En vous basant sur les critères d’évaluation du projet, définissez le statut d’acquisition de chaque compétence et commentez à l'aide de ces instructions :
+
+Validé - Commentez si besoin
+
+Non validé - Listez les critères non remplis
+
+</br>
+
+1. Authentifier un utilisateur et maintenir sa session
+
+- [X] Validé 
+
+Commentaires :
+
+    L'utilisateur peut se connecter à l'application avec des identifiants reconnus;
+    La session est maintenu jusqu'à ce que l'utilisateur se déconnecte ou ferme la page.
+</br>
+
+2. Implémenter un stockage de données sécurisé en utilisant une base de données
+
+- [X] Validé
+
+Commentaires :
+
+    Le mot de passe est haché grace à la bibliothèque bcrypt;
+</br>
+
+3. Développer l’interface d’un site web grâce à un framework front-end
+
+- [X] Validé 
+
+Commentaires :
+
+    La technologie ReactJS a été utilisée pour réaliser le frontend.
+</br>
+
+Livrable
+</br>
+
+Points forts :
+
+    Une attention particulière à la sécurité;
+    L'étudiant est allé au delà du cahier de charges.
+
+Axes d'amélioration :
+
+    L'étudiant aurait pu utiliser un orm: sa lui aurait réduit la charge de travail, l'application sera plus simple à maintenir;
+    L'étudiant aurait pu créer un middleware pour la validation des données.
+</br>
+
+Soutenance
+
+Remarques :
+
+Bravo!!!
+</br>
+</br>
+</br>
+
+English version
+--------------------------
+
+Based on the project evaluation criteria, define the level of acquisition of each particular skill as such :
+
+- [X] Validated - Comment if needed
+
+- [ ] Not validated - List all non-filled criteria 
+
+Evaluated skills
+</br>
+
+1. Authentify a user and keep it's session active
+
+- [X] Validated 
+
+Commentaries :
+
+The user can connect with nown Id's
+Session is maintained until user logout or closes the window.
+</br>
+
+2. Implement a secure data storage using a database
+
+- [X] Validé
+
+Commentaries :
+
+    Password is hashed via bcrypt;
+</br>
+
+3. Develop a web site interface with a frontend framework
+
+- [X] Validé 
+
+Commentaires :
+
+    React technology has been used to develop the app.
+</br>
+
+Delivrable
+</br>
+
+Strong points :
+
+    A special attention to security;
+    The student went beyond what was expected.
+
+Improvement axes :
+
+    The student could have used an orm to reduce it's workload, the application would be easier to maintain as well;
+    The student could have created a middleware to check data.
+</br>
+
+Oral presentation
+
+Comentaries :
+
+Bravo!!!
